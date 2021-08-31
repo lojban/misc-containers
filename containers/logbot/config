@@ -1,0 +1,6 @@
+description="container for the lojban logger bot"
+needs_network=true
+name=logbot
+version=1
+run_args="-v $maindir/data:/srv/lojban -v $containerdir/src:/src"
+run_program='/src/lojban_logger.pl /srv/lojban/irclogs'

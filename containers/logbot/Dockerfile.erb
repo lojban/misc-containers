@@ -1,0 +1,16 @@
+<%= "\n"*30 %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+<%= "# YOU ARE IN THE WRONG PLACE use the ERB file" %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+
+FROM fedora:34
+
+# jbofihe is for /usr/local/bin/find_lojban
+RUN dnf -y install --best --allowerasing findutils curl vim-minimal less perl-App-cpanminus perl-autodie perl-IRC-Utils perl-Bot-BasicBot tzdata https://github.com/lojban/jbofihe/releases/download/v0.43/jbofihe-0.43-1.x86_64.rpm glibc-all-langpacks procps-ng psutils mailx ssmtp && dnf clean all
+
+# Mail sending support
+COPY misc/ssmtp.conf /etc/ssmtp/ssmtp.conf
+
+ENV TZ America/Los_Angeles
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8

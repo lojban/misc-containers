@@ -1,0 +1,14 @@
+# Vim
+[._]*.sw[a-p]
+*~
+
+# helps ripgrep not be silly
+.git
+
+*.pyc
+data/
+containers/web/Dockerfile
+cron/crontab
+containers/logbot/Dockerfile
+misc/httpd.conf
+misc/ssmtp.conf

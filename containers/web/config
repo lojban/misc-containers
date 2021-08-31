@@ -1,0 +1,6 @@
+description="web container for misc/static/old Lojban stuff"
+needs_network=true
+name=web
+version=1
+run_args="-v $maindir/data:/srv/lojban"
+run_program='/usr/sbin/httpd -DFOREGROUND'

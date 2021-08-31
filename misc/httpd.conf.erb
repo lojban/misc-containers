@@ -1,0 +1,345 @@
+<%= "\n"*30 %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+<%= "# YOU ARE IN THE WRONG PLACE use the ERB file" %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+
+#*****
+# Status plugins
+#*****
+ExtendedStatus On
+
+<Location "/server-status">
+    SetHandler server-status
+    Require host localhost
+    Require ip 127.0.0.1
+    Require ip 192.168
+</Location>
+
+<Location /server-info>
+    SetHandler server-info
+    Require host localhost
+    Require ip 127.0.0.1
+    Require ip 192.168
+</Location>
+
+#*****
+# Worker configuration (event MPM)
+#
+# maxconns for this is effectively 3 times MaxRequestWorkers ; see https://httpd.apache.org/docs/current/mod/event.html
+#*****
+<IfModule event.c>
+    MaxRequestsPerChild   4000
+    MinSpareThreads       10
+    ServerLimit           128
+    ThreadsPerChild       8
+    MaxRequestWorkers     128
+</IfModule>
+
+# Supresses a warning message
+ServerName www.lojban.org
+
+#*************************************
+# Main VirtualHost
+#
+# MUST GO LAST because has *.lojban.org
+#*************************************
+<VirtualHost *:<%= web_port %>>
+    ServerName www.lojban.org
+
+    ServerAlias *.lojban.org lojban.org *.lojban.com lojban.com
+
+    ServerAdmin webmaster@lojban.org
+
+    DocumentRoot /srv/lojban/static
+
+    #*****
+    # Logging
+    #
+    # %h doesn't seem to do the thing we want with RemoteIPHeader, so use %a
+    #*****
+    LogFormat "%a %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" mycombined
+
+    ErrorLog /dev/stdout
+    CustomLog /dev/stdout mycombined
+
+    #*****
+    # Allow our internal haproxy forwarder to work
+    #*****
+    RemoteIPHeader X-Forwarded-For
+    RemoteIPInternalProxy 10.0.0.0/8
+    RemoteIPInternalProxy 192.168.123.0/24
+    RemoteIPInternalProxy 127.0.0.1
+    
+    #*****
+    # Basic directory settings
+    #*****
+    <Directory "/srv/lojban">
+      Options All -ExecCGI +Multiviews
+      AllowOverride All
+      Require all granted
+    </Directory>
+
+    #*****
+    # Just a couple of scripts
+    #*****
+    ScriptAlias /cgi-bin/ /srv/lojban/cgi-bin/
+    ScriptAlias /cgi-bin /srv/lojban/cgi-bin
+
+    #*****
+    # Naughty robots
+    #*****
+    Alias /robots.txt /srv/lojban/robots.txt
+
+    #*****
+    # Story writing game
+    #*****
+    Alias /story/ /srv/lojban/story/
+    Alias /story /srv/lojban/story
+    RedirectMatch permanent ^/texts/original/lojban_story/story(/.*)?  http://www.lojban.org/story$1
+
+    <Directory /srv/lojban/story/>
+        Options +ExecCGI
+        AddHandler cgi-script .pl
+        DirectoryIndex index.pl
+    </Directory>
+
+    #*****
+    # Old-style site
+    #*****
+    Alias /old-style/    /srv/lojban/static/
+    Alias /old-style     /srv/lojban/static
+    Alias /static/       /srv/lojban/static/
+    Alias /static        /srv/lojban/static
+    Alias /files/        /srv/lojban/static/files/
+    Alias /files         /srv/lojban/static/files
+    Alias /ftp/          /srv/lojban/static/ftp/
+    Alias /ftp           /srv/lojban/static/ftp
+
+    #*****
+    # We moved the IRC logs
+    #*****
+    RewriteRule ^.*/irclog$ http://www.lojban.org/irclogs/ [last,redirect=permanent]
+    RewriteRule ^.*/irclogs$ http://www.lojban.org/irclogs/ [last,redirect=permanent]
+    Alias /irclogs/ /srv/lojban/irclogs/
+
+    #*****
+    # mailman redirect
+    #*****
+    RedirectMatch permanent ^/lsg2(.*)?  http://mail.lojban.org/mailman/listinfo
+
+    #*****
+    # smartfm/flashcard audio redirect
+    #*****
+    RedirectMatch permanent ^/smartfm_valsi_files(/.*)?  http://lojban.org/static/flashcards_audio$1
+
+    #*****
+    # Private mail archives redirect
+    #*****
+    RewriteRule ^/lists(/.*)? http://mail.lojban.org/lists$1 [last,redirect=permanent]
+
+    #*****
+    # dag / donri 's stuff
+    #*****
+    RewriteRule ^.*/camxes(/.*)$ http://camxes.lojban.org$1 [last,redirect=permanent]
+    RewriteRule ^.*/vlasisku(/.*)$ http://vlasisku.lojban.org$1 [last,redirect=permanent]
+
+    #*****
+    # Complicated redirects for the refgram and the word lists.  It's all from one static location to another, but still.
+    #*****
+    RedirectMatch permanent ^/files/reference-grammar/chap([0-9]*).html  http://www.lojban.org/publications/reference_grammar/chapter$1.html
+    RedirectMatch permanent ^/files/wordlists/(.*) http://www.lojban.org/publications/wordlists/$1.txt
+
+    #*******
+    # Old Tiki/wiki redirects
+    #*******
+    RedirectMatch permanent ^/wiki(/.*)? http://mw.lojban.org$1
+    RedirectMatch permanent ^/bpfk(/.*)? http://mw.lojban.org$1
+
+    #*******
+    # jbovlaste redirects
+    #*******
+    RedirectMatch permanent ^/jbovlaste(/.*)?  http://jbovlaste.lojban.org/$1
+    RedirectMatch permanent ^/cgi-bin/dict.*   http://jbovlaste.lojban.org/lookup
+
+
+    #***********************************************************************
+    # Mega Pile Of Redirects
+    #***********************************************************************
+    RedirectMatch permanent ^/about.html(\.[^.]*)? http://mw.lojban.org/papri/About_Lojban
+    RedirectMatch permanent ^/advanced.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_For_Advanced_Students
+    RedirectMatch permanent ^/beginners.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_For_Beginners
+    RedirectMatch permanent ^/en/(.*) http://www.lojban.org/$1
+    RedirectMatch permanent ^/feedback.html(\.[^.]*)? http://mw.lojban.org/papri/Contact_Us
+    RedirectMatch permanent ^/files/brochures/(.*) http://www.lojban.org/publications/brochures/$1
+    RedirectMatch permanent ^/files/draft-dictionary/(.*) http://www.lojban.org/publications/draft-dictionary/$1
+    RedirectMatch permanent ^/files/genlic.html http://mw.lojban.org/papri/LLG_Web_Copyright_License\&bl
+    RedirectMatch permanent ^/files/machine-grammars/(.*) http://www.lojban.org/publications/formal-grammars/$1
+    RedirectMatch permanent ^/help.html(\.[^.]*)? http://mw.lojban.org/papri/Help
+    RedirectMatch permanent ^/howtohelp.html(\.[^.]*)? http://mw.lojban.org/papri/How_You_Can_Help
+    RedirectMatch permanent ^/index.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban
+    RedirectMatch permanent ^/learning.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban
+    RedirectMatch permanent ^/llg/about_llg.html(\.[^.]*)? http://mw.lojban.org/papri/About_The_Logical_Language_Group
+    RedirectMatch permanent ^/llg/baseline.html(\.[^.]*)? http://mw.lojban.org/papri/Official_Baseline_Statement
+    RedirectMatch permanent ^/llg/bylaws.html(\.[^.]*)? http://mw.lojban.org/papri/Bylaws_of_The_Logical_Language_Group%2C_Inc.
+    RedirectMatch permanent ^/llg/committees.html(\.[^.]*)? http://mw.lojban.org/papri/Official_LLG_Committees
+    RedirectMatch permanent ^/llg/contact.html(\.[^.]*)? http://mw.lojban.org/papri/Contact_Us
+    RedirectMatch permanent ^/llg/genlic.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_Web_Copyright_License
+    RedirectMatch permanent ^/llg.html(\.[^.]*)? http://mw.lojban.org/papri/The_Logical_Language_Group
+    RedirectMatch permanent ^/llg/memberlist.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_Members
+    RedirectMatch permanent ^/llg/minutes/1989_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_1989_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/1990_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_1990_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/1991_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_1991_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/1992_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_1992_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/1993_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_1993_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/1994_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_1994_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/1995_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_1995_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/1996_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_1996_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/1997_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_1997_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/1998_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_1998_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/1999_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_1999_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/2000_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_2000_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/2001_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_2001_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/2001_board.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_2001_Board_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/2002_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_2002_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/2002_board_2.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_2002_Second_Board_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/2002_board.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_2002_Board_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes/2003_annual.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_2003_Annual_Meeting_Minutes
+    RedirectMatch permanent ^/llg/minutes.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_Meeting_Minutes
+    RedirectMatch permanent ^/llg/old_projects.html(\.[^.]*)? http://mw.lojban.org/papri/Old_LLG_Projects
+    RedirectMatch permanent ^/llg/projects.html(\.[^.]*)? http://mw.lojban.org/papri/Official_LLG_Projects
+    RedirectMatch permanent ^/publications/brochures/gismu.html(\.[^.]*)? http://mw.lojban.org/papri/gismu_Brochure
+    RedirectMatch permanent ^/publications/brochures.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Brochures
+    RedirectMatch permanent ^/publications/brochures/llg.html(\.[^.]*)? http://mw.lojban.org/papri/Old_LLG_Brochure
+    RedirectMatch permanent ^/publications/brochures/lojbroch.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Introductory_Brochure
+    RedirectMatch permanent ^/publications/brochures/ordernet.html(\.[^.]*)? http://mw.lojban.org/papri/Old_LLG_Order_Form
+    RedirectMatch permanent ^/publications/brochures/overview.html(\.[^.]*)? http://mw.lojban.org/papri/Overview_Of_Lojban
+    RedirectMatch permanent ^/publications/brochures/regform(\.[^.]*)? http://mw.lojban.org/papri/Old_LLG_Registration_Form
+    RedirectMatch permanent ^/publications/cll.html(\.[^.]*)? http://mw.lojban.org/papri/The_Complete_Lojban_Language
+    RedirectMatch permanent ^/publications/draft_dictionary.html(\.[^.]*)? http://mw.lojban.org/papri/Old_Draft_Dictionary
+    RedirectMatch permanent ^/publications/draft_textbook.html(\.[^.]*)? http://mw.lojban.org/papri/Old_Draft_Textbook
+    RedirectMatch permanent ^/publications/etymology/finprims.html(\.[^.]*)? http://mw.lojban.org/papri/gismu_Etymology
+    RedirectMatch permanent ^/publications/etymology.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Etymology
+    RedirectMatch permanent ^/publications/formal_grammars.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Formal_Grammars
+    RedirectMatch permanent ^/publications.html(\.[^.]*)? http://mw.lojban.org/papri/LLG_Publications
+    RedirectMatch permanent ^/publications/level0.html(\.[^.]*)? http://mw.lojban.org/papri/What_Is_Lojban%3F%2C_The_Book
+    RedirectMatch permanent ^/publications/loglan.html(\.[^.]*)? http://mw.lojban.org/papri/The_Loglan-Lojban_Dispute
+    RedirectMatch permanent ^/publications/lojintro.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Introductory_Essay
+    RedirectMatch permanent ^/publications/miniexer.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Mini-Lesson_Exercises
+    RedirectMatch permanent ^/publications/minilsn.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Mini-Lesson
+    RedirectMatch permanent ^/publications/misc.html(\.[^.]*)? http://mw.lojban.org/papri/Miscellaneous_LLG_Publications
+    RedirectMatch permanent ^/publications/reference_grammar.html(\.[^.]*)? http://mw.lojban.org/papri/The_Lojban_Reference_Grammar
+    RedirectMatch permanent ^/publications/tutorial/introduction.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Tutorial%3A_Introduction
+    RedirectMatch permanent ^/publications/tutorial/lesson1.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Tutorial%3A_Lesson_1
+    RedirectMatch permanent ^/publications/tutorial/lesson2.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Tutorial%3A_Lesson_2
+    RedirectMatch permanent ^/publications/tutorial/lesson3.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Tutorial%3A_Lesson_3
+    RedirectMatch permanent ^/publications/tutorial/lesson4.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Tutorial%3A_Lesson_4
+    RedirectMatch permanent ^/publications/tutorial/lesson5.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Tutorial%3A_Lesson_5
+    RedirectMatch permanent ^/publications/tutorial/lesson6.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Tutorial%3A_Lesson_6
+    RedirectMatch permanent ^/publications/tutorial/lesson7.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Tutorial%3A_Lesson_7
+    RedirectMatch permanent ^/publications/tutorial/lojbancourse.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Tutorial
+    RedirectMatch permanent ^/publications/wordlists.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Wordlists
+    RedirectMatch permanent ^/quick.html(\.[^.]*)? http://mw.lojban.org/papri/Popular_Pages
+    RedirectMatch permanent ^/resources/community.html(\.[^.]*)? http://mw.lojban.org/papri/Lojbanic_Community_Links
+    RedirectMatch permanent ^/resources/faq.html(\.[^.]*)? http://mw.lojban.org/papri/Frequently_Asked_Questions_About_Lojban
+    RedirectMatch permanent ^/resources/forums.html(\.[^.]*)? http://mw.lojban.org/papri/Lojbanic_Forums
+    RedirectMatch permanent ^/resources.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_Resources
+    RedirectMatch permanent ^/resources/jbobau.html(\.[^.]*)? http://mw.lojban.org/papri/samrxuebe_pabgu_bau_la_.lojban.
+    RedirectMatch permanent ^/resources/misc.html(\.[^.]*)? http://mw.lojban.org/papri/Miscellaneous_Lojban_Stuff
+    RedirectMatch permanent ^/resources/non_english.html(\.[^.]*)? http://mw.lojban.org/papri/Non-English_Lojban_Materials
+    RedirectMatch permanent ^/resources/promotional.html(\.[^.]*)? http://mw.lojban.org/papri/Promotional_Materials
+    RedirectMatch permanent ^/resources/tools.html(\.[^.]*)? http://mw.lojban.org/papri/Lojbanic_Software
+    RedirectMatch permanent ^/search.html(\.[^.]*)? https://mw.lojban.org/papri/Special:Search
+    RedirectMatch permanent ^/sitemap.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban
+    RedirectMatch permanent ^/texts.html(\.[^.]*)? http://mw.lojban.org/papri/Texts_in_Lojban
+    RedirectMatch permanent ^/texts/original.html(\.[^.]*)? http://mw.lojban.org/papri/Original_Texts_In_Lojban
+    RedirectMatch permanent ^/texts/translations/cvs.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban_CVS_Server
+    RedirectMatch permanent ^/texts/translations.html(\.[^.]*)? http://mw.lojban.org/papri/Translations
+    RedirectMatch permanent ^/whatis.html(\.[^.]*)? http://mw.lojban.org/papri/What_Is_Lojban%3F
+    RedirectMatch permanent ^/whats_new.html(\.[^.]*)? http://mw.lojban.org/papri/What%27s_New%3F
+    RedirectMatch permanent ^/where.html(\.[^.]*)? http://mw.lojban.org/papri/Lojban
+    RedirectMatch permanent ^/why_learn.html(\.[^.]*)? http://mw.lojban.org/papri/Why_Learn_Lojban%3F
+
+    # Used by the cll header links and the like; we want to have the
+    # option of moving this one.
+    RedirectMatch ^/cll http://mw.lojban.org/papri/The_Complete_Lojban_Language
+
+    #***********************************************************************
+    # RewriteEngine based stuff
+    #***********************************************************************
+    RewriteEngine On
+
+    # Debug mod_rewrite:
+    ## LogLevel alert rewrite:trace6
+
+    # / and /-like URLs
+    RewriteRule  ^/[wt]iki/?$                https://www.lojban.org/mw-redir.html                                         [last,redirect=permanent]
+    RewriteRule  ^/l?mw/?$                   https://www.lojban.org/mw-redir.html                                         [last,redirect=permanent]
+    RewriteRule  ^/?$                        https://www.lojban.org/mw-redir.html                                         [last,redirect=permanent]
+
+    # jboski has moved, but we still want people to be able to reach
+    # the .txt source file
+    RewriteRule  ^/jboski/.*.php$            https://jboski.lojban.org/                                                   [last,redirect=permanent]
+
+    # Very old forums
+    RewriteRule ^/tiki/forum5(.*)?           http://mw.lojban.org/extensions/tikiforum5/www.lojban.org/tiki$1             [last,redirect=permanent]
+
+    # Normal wiki pages go to MediaWiki
+    #
+    # This is for pages like
+    # http://www.lojban.org/tiki/tiki-index.php?page=Texts+in+Lojban&bl
+    #
+    # The complexity here is because (1) Apache doesn't normally
+    # give you access to the query string (the bit after "?") and
+    # (2) RewriteCond's REQUEST_URL apparently doesn't see previous
+    # rewrites properly.  So we use RewriteCond to pull the bit we
+    # need in to %1 (NOTE % for RewriteCond values instead of $ for
+    # RewriteRule values), rewrite that to /FAKE_REWRITE_MW, and
+    # then key off that for further processing without using
+    # RewriteCond again.
+    RewriteCond %{REQUEST_URI}                     ^/tiki/tiki-index.php$
+    RewriteCond %{QUERY_STRING}                    page=([^&]*)
+    RewriteRule .*                                 /FAKE_REWRITE_MW/%1                                          [qsdiscard,next]
+    RewriteRule ^/FAKE_REWRITE_MW/(.*)\+(.*)$      /FAKE_REWRITE_MW/$1_$2                                       [next]
+    RewriteRule /FAKE_REWRITE_MW/(.*)              http://mw.lojban.org/papri/$1                                [last,redirect=permanent]
+
+    # Normal wiki pages go to MediaWiki
+    #
+    # This is for pages like
+    # http://www.lojban.org/tiki/Lojban+Introductory+Brochure
+    #
+    # Anything with no . in it is potentially a short page URL, so
+    # first we rewrite any such with + into _, and then we pass it
+    # to MW
+    RewriteRule ^/tiki/([^.]*)\&(.*)$                           /tiki/$1                                        [qsdiscard,next]
+    RewriteRule ^/tiki/([^.]*)\+([^.]*)$                        /tiki/$1_$2                                     [qsdiscard,next]
+    RewriteRule ^/tiki/([^.]*)$                                 http://mw.lojban.org/papri/$1                   [qsdiscard,last,redirect=permanent]
+
+    # Anything else Tiki related can go on to the Tiki, for now
+    RewriteCond %{REQUEST_URI}                                  /tiki/
+    RewriteRule ^(.*)$                                          http://tiki.lojban.org$1                        [last,redirect=permanent]
+
+    #*******
+    # MediaWiki Redirect
+    #*******
+    RewriteCond %{REQUEST_URI}                                  /l?mw/
+    RewriteRule ^(.*)$                                          http://mw.lojban.org$1                          [last,redirect=permanent]
+    RewriteCond %{REQUEST_URI}                                  /papri/
+    RewriteRule ^(.*)$                                          http://mw.lojban.org$1                          [last,redirect=permanent]
+
+    #*******
+    # Try to redirect requests at the root that don't match anything else to the wiki
+    #*******
+    #
+    # It's hard to get this working properly, in particular it
+    # currently breaks things like
+    # http://www.lojban.org/resources/forums.html and
+    # http://www.lojban.org/irclogs/
+    #
+    # Leaving it off for now
+    #
+    # RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME}            !-f
+    # RewriteCond %{REQUEST_FILENAME}                             !-f
+    # RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME}            !-d
+    # RewriteCond %{REQUEST_FILENAME}                             !-d
+    # RewriteRule ^(.*)$                                          http://mw.lojban.org$1                          [last,redirect=permanent]
+</VirtualHost>
