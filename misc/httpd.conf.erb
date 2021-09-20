@@ -279,6 +279,7 @@ ServerName www.lojban.org
     # jboski has moved, but we still want people to be able to reach
     # the .txt source file
     RewriteRule  ^/jboski/.*.php$            https://jboski.lojban.org/                                                   [last,redirect=permanent]
+    RewriteRule  ^/jboski/$            	     https://jboski.lojban.org/                                                   [last,redirect=permanent]
 
     # Very old forums
     RewriteRule ^/tiki/forum5(.*)?           http://mw.lojban.org/extensions/tikiforum5/www.lojban.org/tiki$1             [last,redirect=permanent]
