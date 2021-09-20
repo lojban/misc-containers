@@ -12,3 +12,7 @@ cron/crontab
 containers/logbot/Dockerfile
 misc/httpd.conf
 misc/ssmtp.conf
+
+shared_data/
+
+secrets
