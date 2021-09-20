@@ -11,3 +11,9 @@ MAILTO=webmaster@lojban.org
 14 */5 * * * <%= maindir %>/rebuild_images.sh
 
 25 * * * * <%= maindir %>/cron/cron-run-inside.sh logbot /src/check_logger.sh
+
+# Daily backups
+13 13 * * * <%= maindir %>/self_backup.sh zh1785@zh1785.rsync.net '+%j'
+
+# Daily restore test
+14 14 * * * <%= maindir %>/self_restore_test.sh zh1785@zh1785.rsync.net webmaster@lojban.org
