@@ -38,6 +38,155 @@ ExtendedStatus On
 # Supresses a warning message
 ServerName www.lojban.org
 
+# Mailing list archives
+<VirtualHost *:<%= web_port %>>
+    ServerName mail.lojban.org
+
+    ServerAlias mail.lojban.com mailman.lojban.org mailman.lojban.com
+
+    ServerAdmin webmaster@lojban.org
+
+    DocumentRoot /srv/empty
+
+    #*****
+    # Basic directory settings
+    #*****
+    <Directory "/srv/lojban">
+      Options All -ExecCGI +Multiviews +Indexes
+      AllowOverride All
+      Require all granted
+    </Directory>
+
+    #*****
+    # Logging
+    #
+    # %h doesn't seem to do the thing we want with RemoteIPHeader, so use %a
+    #*****
+    LogFormat "%a %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" mycombined
+
+    ErrorLog /dev/stdout
+    CustomLog /dev/stdout mycombined
+
+    #*****
+    # Allow our internal haproxy forwarder to work
+    #*****
+    RemoteIPHeader X-Forwarded-For
+    RemoteIPInternalProxy 10.0.0.0/8
+    RemoteIPInternalProxy 192.168.123.0/24
+    RemoteIPInternalProxy 127.0.0.1
+
+    <Directory /srv/lojban/web/>
+      Options Indexes
+      Require all granted
+      IndexOptions ShowForbidden
+    </Directory>
+
+    <Directory /srv/lojban/plain/>
+      Options Indexes
+      Require all granted
+      ForceType text/plain
+      IndexOptions ShowForbidden
+    </Directory>
+
+    RedirectMatch permanent ^/$  http://mail.lojban.org/lists/
+
+    #*******************
+    #
+    # Web-Based/MHonArc lists
+    #
+    #*******************
+    RedirectMatch permanent ^/lists$ http://mail.lojban.org/lists/
+    RedirectMatch permanent ^/(announce|bpfk|bpfk-announce|dracyselkei|jbofongri|jboske|jbosnu|jbovlaste|lbck|llg-board|llg-members|lojban|lojban-beginners|lojban-de|lojban-es|lojban-fr|lojban-list|lojban_story|old_lojban-list|pod|wikichanges|wikidiscuss|wikineurotic)(/.*)?$ http://mail.lojban.org/lists/$1$2
+    Alias /lists/ /srv/lojban/web/
+
+    ##
+    ## Private mail archives
+    ##
+    <Location "/lists/llg-members/">
+            AuthType Basic
+            AuthName "LLG Members -- Ask the board for access"
+            AuthUserFile "/srv/lojban/mail_htpasswd"
+            Require valid-user
+    </Location>
+    <Location "/lists/llg-board/">
+            AuthType Basic
+            AuthName "LLG Board -- Ask the board for access"
+            AuthUserFile "/srv/lojban/mail_htpasswd"
+            Require valid-user
+    </Location>
+
+    #*******************
+    #
+    # Plain text lists
+    #
+    #*******************
+    RedirectMatch permanent ^/lists-plain$ http://mail.lojban.org/lists-plain/
+    Alias /lists-plain/ /srv/lojban/plain/
+
+    <Directory /srv/lojban/plain/lojban-es/>
+      # Default charset to iso-8859-1
+      # (http://www.apache.org/info/css-security/).
+
+      AddDefaultCharset iso-8859-1
+    </Directory>
+
+    <Location "/lists-plain/llg-members/">
+            AuthType Basic
+            AuthName "LLG Members -- Ask the board for access"
+            AuthUserFile "/srv/lojban/mail_htpasswd"
+            Require valid-user
+    </Location>
+    <Location "/lists-plain/llg-board/">
+            AuthType Basic
+            AuthName "LLG Board -- Ask the board for access"
+            AuthUserFile "/srv/lojban/mail_htpasswd"
+            Require valid-user
+    </Location>
+    <Location "/lists-plain/special">
+            AuthType Basic
+            AuthName "special -- Ask the board for access"
+            AuthUserFile "/srv/lojban/mail_htpasswd"
+            Require valid-user
+    </Location>
+    <Location "/lists-plain/special-lojban">
+            AuthType Basic
+            AuthName "special-lojban -- Ask the board for access"
+            AuthUserFile "/srv/lojban/mail_htpasswd"
+            Require valid-user
+    </Location>
+    <Location "/lists-plain/special-president">
+            AuthType Basic
+            AuthName "special-president -- Ask the board for access"
+            AuthUserFile "/srv/lojban/mail_htpasswd"
+            Require valid-user
+    </Location>
+    <Location "/lists-plain/special-secretary">
+            AuthType Basic
+            AuthName "special-secretary -- Ask the board for access"
+            AuthUserFile "/srv/lojban/mail_htpasswd"
+            Require valid-user
+    </Location>
+    <Location "/lists-plain/special-treasurer">
+            AuthType Basic
+            AuthName "special-treasurer -- Ask the board for access"
+            AuthUserFile "/srv/lojban/mail_htpasswd"
+            Require valid-user
+    </Location>
+    <Location "/lists-plain/special-vp">
+            AuthType Basic
+            AuthName "special-vp -- Ask the board for access"
+            AuthUserFile "/srv/lojban/mail_htpasswd"
+            Require valid-user
+    </Location>
+    <Location "/lists-plain/llg-board/">
+            AuthType Basic
+            AuthName "LLG Board -- Ask the board for access"
+            AuthUserFile "/srv/lojban/mail_htpasswd"
+            Require valid-user
+    </Location>
+
+</VirtualHost>
+
 #*************************************
 # Main VirtualHost
 #
@@ -69,7 +218,7 @@ ServerName www.lojban.org
     RemoteIPInternalProxy 10.0.0.0/8
     RemoteIPInternalProxy 192.168.123.0/24
     RemoteIPInternalProxy 127.0.0.1
-    
+
     #*****
     # Basic directory settings
     #*****

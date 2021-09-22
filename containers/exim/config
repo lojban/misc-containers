@@ -1,0 +1,34 @@
+description="container for exim (mail handling/MTA) for lojban.org"
+needs_network=true
+after_containers='sa clamav'
+name=exim
+version=1
+# OK, so this uidmap thing.
+#
+# Fedora exim wants to setuid to "93" specifically.  Not the exim
+# user's uid, just "93"; it's baked in at build time (this appears
+# to be standard for exim, not just Fedora).
+#
+# The uidmap bits here mean "map 0-92 in the container to 1-93 on the
+# host, map 93 in the container to 0 on the host, and map 94-[lots]
+# in the container to 95-[lots] on the host", which sounds wacky
+# except that per
+# https://docs.podman.io/en/latest/markdown/podman-run.1.html , in
+# rootless mode "0 on the host" means "the UID of the user", and "1
+# on the host" means "the first subuid of the user", and so on.
+#
+# So the net effect is that UID 93 in the container (the exim user)
+# runs as the calling user (spdrata) on the host.
+#
+# exim *starts* as root, so anything that exim writes out as root
+# will go to the wrong uid, but we can't actually fix that, and it
+# mostly doesn't seem to do that at all.
+#
+# The -t is because of the logging situation; see the top of exim.conf
+no_userns=true
+run_args="-t --uidmap 0:1:92 --uidmap 93:0:1 --uidmap 94:95:8192 -v $maindir/shared_data/var_spool/:/var/spool -v $maindir/shared_data/srv_lojban:/srv/lojban"
+
+# The chown here is because we start as root and then switch to the exim user,
+# but that means that /dev/stdout (which points to /proc/self/fd/0) is owned by
+# root, so we have to fix that as root first
+run_program='bash -c "chown exim:exim /proc/self/fd/* 2>/dev/null ; /usr/local/bin/exim-gen-cert.sh && /usr/sbin/exim -bdf -q15m"'

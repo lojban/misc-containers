@@ -1,0 +1,9 @@
+description="container for clamd/clamav for lojban.org"
+needs_network=true
+name=clamav
+before_containers=exim
+version=1
+# The mounting of /var/lib/clamav is just an optimization to improve
+# startup time; it's not actaully important data
+run_args="-v $maindir/shared_data/var_lib_clamav/:/var/lib/clamav"
+run_program='bash -c "/usr/bin/freshclam --foreground=true && /usr/sbin/clamd -c /etc/clamd.d/exim.conf --foreground --debug"'

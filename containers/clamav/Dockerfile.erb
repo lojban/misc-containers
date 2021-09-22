@@ -1,0 +1,38 @@
+<%= "\n"*30 %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+<%= "# YOU ARE IN THE WRONG PLACE use the ERB file" %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+
+FROM fedora:34
+
+# *************** WARNING
+# DO NOT change the exim user's UID: Fedora exim wants to setuid to "93" specifically, by ID; changing the exim user will just cause confusion and heartache
+#
+# (This is the default for how exim is built, so it's not obvious that using non-Fedora exim would help, unless we want to build it ourselves.)
+#
+# For further discussion see containers/exim/config
+# *************** WARNING
+
+RUN dnf -y install --best --allowerasing findutils curl vim-minimal less tzdata glibc-all-langpacks procps-ng psutils mailx swaks exim-clamav patch hostname openssl clamd clamav-update && dnf clean all
+
+# Make the exim and clam users match our user; makes things way easier
+
+RUN for user in exim mail clamupdate clamscan ; \
+do \
+find / -xdev -user $user -print0 | xargs -r -0 chown <%= userid %> ; \
+usermod -o -u <%= userid %> $user ; \
+done
+
+RUN for group in exim mail clamupdate virusgroup clamscan ; \
+do \
+find / -xdev -group $group -print0 | xargs -r -0 chgrp <%= groupid %> ; \
+groupmod -o -g <%= groupid %> $group ; \
+done
+
+RUN sed -i -r -e 's/^#TCPAddr .*/TCPAddr 127.0.0.1/' -e 's/^#TCPSocket .*/TCPSocket 3310/' -e 's/^\s*Log/# Log/g' /etc/clamd.d/exim.conf
+
+RUN chown clamscan /etc/freshclam.conf
+
+ENV TZ America/Los_Angeles
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8

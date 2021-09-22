@@ -12,6 +12,9 @@ cron/crontab
 containers/logbot/Dockerfile
 misc/httpd.conf
 misc/ssmtp.conf
+containers/clamav/Dockerfile
+containers/exim/Dockerfile
+containers/sa/Dockerfile
 
 shared_data/
 

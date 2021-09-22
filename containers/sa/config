@@ -1,0 +1,7 @@
+description="container for spamassassin for lojban.org"
+needs_network=true
+name=sa
+before_containers=exim
+version=1
+run_args=" "
+run_program="/usr/bin/spamd --syslog=stderr -c -m5 -p 25783"

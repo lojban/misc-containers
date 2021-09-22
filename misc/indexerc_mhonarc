@@ -1,0 +1,8 @@
+<ListBegin>
+<ul>
+<li><a href="$TIDXFNAME$">Thread Index</a></li>
+</ul>
+$PGLINK(FIRST)$$PGLINK(PREV)$$PGLINK(NEXT)$$PGLINK(LAST)$
+<hr>
+<ul>
+</ListBegin>

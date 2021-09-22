@@ -24,3 +24,6 @@ COPY misc/httpd.conf /etc/httpd/conf.d/drata.conf
 
 # We're really, actually running as our user
 RUN find /etc/http* /var/log/http* -print0 | xargs -0 chown apache:apache
+
+# For DocumentRoot
+RUN mkdir /srv/empty

@@ -1,0 +1,344 @@
+#**************************************************************
+# BEGIN system aliases (however unlikely some of them might be)
+#**************************************************************
+abuse:		postmaster@lojban.org
+adm:		postmaster@lojban.org
+amanda:		postmaster@lojban.org
+apache:		postmaster@lojban.org
+backuppc:	postmaster@lojban.org
+backup:		postmaster@lojban.org
+bin:		postmaster@lojban.org
+canna:		postmaster@lojban.org
+cvs:		postmaster@lojban.org
+daemon:		postmaster@lojban.org
+dbus:		postmaster@lojban.org
+decode:		postmaster@lojban.org
+desktop:	postmaster@lojban.org
+dovecot:	postmaster@lojban.org
+dumper:		postmaster@lojban.org
+ecartis:	postmaster@lojban.org
+fail2ban:	postmaster@lojban.org
+fax:		postmaster@lojban.org
+ftp-adm:	ftp@lojban.org
+ftpadm:		ftp@lojban.org
+ftp-admin:	ftp@lojban.org
+ftpadmin:	ftp@lojban.org
+ftp:		postmaster@lojban.org
+games:		postmaster@lojban.org
+gdm:		postmaster@lojban.org
+gnats:		postmaster@lojban.org
+gopher:		postmaster@lojban.org
+halt:		postmaster@lojban.org
+hostmaster:	postmaster@lojban.org
+ident:		postmaster@lojban.org
+ingres:		postmaster@lojban.org
+irc:		postmaster@lojban.org
+ldap:		postmaster@lojban.org
+listar:		postmaster@lojban.org
+list:		postmaster@lojban.org
+logcheck:	postmaster@lojban.org
+lp:		postmaster@lojban.org
+mailer-daemon:	postmaster@lojban.org
+mailman:	postmaster@lojban.org
+mailman-admin:	postmaster@lojban.org
+mailnull:	postmaster@lojban.org
+mail:		postmaster@lojban.org
+majordomo:	postmaster@lojban.org
+majordom:	postmaster@lojban.org
+manager:	postmaster@lojban.org
+man:		postmaster@lojban.org
+marketing:	postmaster@lojban.org
+moz:		postmaster@lojban.org
+msql:		postmaster@lojban.org
+mysql:		postmaster@lojban.org
+named:		postmaster@lojban.org
+netdump:	postmaster@lojban.org
+newsadmin:	news@lojban.org
+newsadm:	news@lojban.org
+news:		postmaster@lojban.org
+nfsnobody:	postmaster@lojban.org
+nobody:		postmaster@lojban.org
+noc:		postmaster@lojban.org
+nscd:		postmaster@lojban.org
+ntp:		postmaster@lojban.org
+nut:		postmaster@lojban.org
+nwn:		postmaster@lojban.org
+operator:	postmaster@lojban.org
+pcap:		postmaster@lojban.org
+postfix:	postmaster@lojban.org
+postgres:	postmaster@lojban.org
+privoxy:	postmaster@lojban.org
+proxy:		postmaster@lojban.org
+pvm:		postmaster@lojban.org
+quagga:		postmaster@lojban.org
+radiusd:	postmaster@lojban.org
+radvd:		postmaster@lojban.org
+rpc:		postmaster@lojban.org
+rpcuser:	postmaster@lojban.org
+rpm:		postmaster@lojban.org
+sales:		postmaster@lojban.org
+security:	postmaster@lojban.org
+shutdown:	postmaster@lojban.org
+smmsp:		postmaster@lojban.org
+squid:		postmaster@lojban.org
+sshd:		postmaster@lojban.org
+support:	postmaster@lojban.org
+sync:		postmaster@lojban.org
+sys:		postmaster@lojban.org
+system:		postmaster@lojban.org
+toor:		postmaster@lojban.org
+usenet:		news@lojban.org
+usenet:		postmaster@lojban.org
+uucp:		postmaster@lojban.org
+vcsa:		postmaster@lojban.org
+webalizer:	postmaster@lojban.org
+webmaster:	postmaster@lojban.org
+wnn:		postmaster@lojban.org
+www-data:	postmaster@lojban.org
+www:		postmaster@lojban.org
+zroot:		postmaster@lojban.org
+
+null: /dev/null
+
+root:		postmaster@lojban.org
+
+robin:          rlpowell@lojban.org
+turgul:         rlpowell@lojban.org
+
+#**************************************************************
+# END system aliases (however unlikely some of them might be)
+#**************************************************************
+
+
+
+#****************
+# System Alias Final Destination
+#****************
+
+postmaster: rlpowell@lojban.org
+info: rlpowell@lojban.org
+
+#*******
+# jbovlaste
+#*******
+# Saves a plain copy and sends on
+jbovlaste-admin: /srv/lojban/plain/jbovlaste-admin/, webmaster@lojban.org
+
+#*******
+# The board.
+#*******
+# All the "special" boxes are independent because otherwise, due to
+# de-duplication, whoever got the mail first blocked it for everyone
+# else.
+president: /srv/lojban/plain/special-president/, comcaresvcs@gmail.com
+vice-president: vp@lojban.org
+vp: /srv/lojban/plain/special-vp/, lojbab@lojban.org
+secretary: /srv/lojban/plain/special-secretary/, shunpiker@gmail.com, robinleepowell@gmail.com
+treasurer: /srv/lojban/plain/special-treasurer/, shunpiker@gmail.com, robinleepowell@gmail.com
+fulfillment: /srv/lojban/plain/special-fulfillment/, lojbab@lojban.org
+
+#*******
+# lojban@ and friends
+#*******
+lojban: /srv/lojban/plain/special-lojban/, secretary@lojban.org, president@lojban.org, vp@lojban.org, noras@cox.net, comcaresvcs@gmail.com, lojbab@lojban.org
+# Mispelling
+lobjan: lojban@lojban.org
+
+#*******
+# Misc user redirects
+#*******
+lojbob: lojbab@lojban.org
+lobjab: lojbab@lojban.org
+lojbab: rlechevalier@cox.net
+angela: katty591@cox.net
+noras: noras@cox.net
+michael: mikelec@cox.net
+selgre: xod@thestonecutters.net
+gleki: gleki.is.my.name@gmail.com
+bangu: gleki.is.my.name@gmail.com
+
+#*******
+# Me
+#*******
+cons: rlpowell@lojban.org
+
+# bitl doesn't appear be around anymore
+bitl: /dev/null
+
+#####
+# Mailing list aliases follow
+#####
+
+# Aliases for 'lojban-story' mailing list.
+lojban-story: :fail: This list is dead.
+lojban-story-real: :fail: This list is dead.
+lojban-story-request: :fail: This list is dead.
+lojban-story-repost: :fail: This list is dead.
+lojban-story-admins: :fail: This list is dead.
+lojban-story-moderators: :fail: This list is dead.
+lojban-story-bounce: :fail: This list is dead.
+
+# Aliases for the announcement list
+lojban-announcements: lojban-announcements@googlegroups.com
+lojban-announce: lojban-announcements@googlegroups.com
+lojban-announcements-archive: /srv/lojban/plain/lojban-announcements/
+
+# Aliases for 'lojban-www' mailing list.
+lojban-www: :fail: This list is dead.
+lojban-www-request: :fail: This list is dead.
+lojban-www-repost: :fail: This list is dead.
+lojban-www-admins: :fail: This list is dead.
+lojban-www-moderators: :fail: This list is dead.
+lojban-www-bounce: :fail: This list is dead.
+
+# Aliases for 'lojban-beginners' mailing list.
+lojban-beginners: lojban-beginners@googlegroups.com
+lojban-beginners-real: lojban-beginners@googlegroups.com
+lojban-beginners-archive:  /srv/lojban/plain/lojban-beginners/
+lojban-beginners-request: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+lojban-beginners-repost: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+lojban-beginners-admins: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+lojban-beginners-moderators: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+lojban-beginners-bounce: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+
+# Aliases for 'lojban-list' mailing list.
+lojban-test: lojbo-samtci-vamtu@googlegroups.com
+lojban-in: lojban@googlegroups.com
+lojban-en: lojban@googlegroups.com
+lojban-list: lojban@googlegroups.com
+lojban-list-real: lojban@googlegroups.com
+lojban-list-archive:  /srv/lojban/plain/lojban-list/
+lojban-request: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+lojban-list-request: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+lojban-list-test: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+lojban-list-subscribe: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+lojban-list-repost: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+lojban-list-admins: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+lojban-list-moderators: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+lojban-list-bounce: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+
+# Aliases for 'bpfk-announce' mailing list.
+bpfk: bpfk-list@googlegroups.com
+bpfk-announce: bpfk-list@googlegroups.com
+bpfk-announce-real: bpfk-list@googlegroups.com
+bpfk-archive:  /srv/lojban/plain/bpfk/
+bpfk-announce-request: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+bpfk-announce-repost: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+bpfk-announce-admins: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+bpfk-announce-moderators: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+bpfk-announce-bounce: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
+
+# Aliases for 'jbofongri' mailing list.
+jbofongri: :fail: This list is dead.
+jbofongri-real: :fail: This list is dead.
+jbofongri-request: :fail: This list is dead.
+jbofongri-repost: :fail: This list is dead.
+jbofongri-admins: :fail: This list is dead.
+jbofongri-moderators: :fail: This list is dead.
+jbofongri-bounce: :fail: This list is dead.
+
+# lbck, hosted at google groups at
+# http://groups.google.com/group/lojban-lbck?lnk=gcimh
+lbck: lojban-lbck@googlegroups.com
+lbck-archive: /srv/lojban/plain/lbck/
+
+#*******************************************************************************
+# Lists We Actually Host (i.e. mailman lists)
+#*******************************************************************************
+
+# Aliases for 'lojban-fr' mailing list.
+lojban-fr-archive:  /srv/lojban/plain/lojban-fr/
+lojban-fr:  :fail: This list has been shut down.  Bug postmaster@lojban.org if you think that's a mistake.
+
+# Aliases for 'lojban-de' mailing list.
+lojban-de-archive:  /srv/lojban/plain/lojban-de/
+lojban-de:  :fail: This list has been shut down.  Bug postmaster@lojban.org if you think that's a mistake.
+
+# Aliases for 'lojban-es' mailing list.
+lojban-es-archive:  /srv/lojban/plain/lojban-es/
+lojban-es:  :fail: This list has been shut down.  Bug postmaster@lojban.org if you think that's a mistake.
+
+# Aliases for 'jbovlaste' mailing list.
+jbovlaste-archive:  /srv/lojban/plain/jbovlaste/
+jbovlaste:  :fail: This list has been shut down.  Bug postmaster@lojban.org if you think that's a mistake.
+
+# Aliases for 'llg-members' mailing list.
+llg-members-archive:  /srv/lojban/plain/llg-members/
+llg-members: :fail: This list has been shut down.  Bug postmaster@lojban.org if you think that's a mistake.
+
+# Aliases for 'llg-board' mailing list.
+llg-board-archive:  /srv/lojban/plain/llg-board/
+llg-board: /srv/lojban/plain/llg-board/, comcaresvcs@gmail.com, lojbab@lojban.org, shunpiker@gmail.com, robinleepowell@gmail.com, gleki.is.my.name@gmail.com
+
+# Aliases for 'wikidiscuss' mailing list.
+wikidiscuss-archive:  :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikidiscuss: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikidiscuss-announce: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikidiscuss-announce-real: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikidiscuss-archive:  :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikidiscuss-announce-request: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikidiscuss-announce-repost: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikidiscuss-announce-admins: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikidiscuss-announce-moderators: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikidiscuss-announce-bounce: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+
+# Aliases for 'wikichanges' mailing list.
+wikichanges-archive:  :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikichanges: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikichanges-announce: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikichanges-announce-real: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikichanges-archive:  :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikichanges-announce-request: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikichanges-announce-repost: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikichanges-announce-admins: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikichanges-announce-moderators: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikichanges-announce-bounce: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+
+# Aliases for 'wikineurotic' mailing list.
+# Just like wikichanges, but with more.
+wikineurotic-archive:  :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikineurotic: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikineurotic-announce: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikineurotic-announce-real: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikineurotic-archive:  :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikineurotic-announce-request: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikineurotic-announce-repost: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikineurotic-announce-admins: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikineurotic-announce-moderators: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+wikineurotic-announce-bounce: :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
+
+#####
+# (disabled) Request Tracker aliases follow
+#####
+rt:			postmaster@lojban.org
+rt-real:		postmaster@lojban.org
+rt-comment:		postmaster@lojban.org
+rt-comment-real:	postmaster@lojban.org
+bugs:			postmaster@lojban.org
+bugs-comment:		postmaster@lojban.org
+request:		postmaster@lojban.org
+bitch:			postmaster@lojban.org
+request-comment:	postmaster@lojban.org
+requests:		postmaster@lojban.org
+requests-comment:	postmaster@lojban.org
+rt-jvs:			postmaster@lojban.org
+rt-jvs-real:		postmaster@lojban.org
+rt-jvs-comment:		postmaster@lojban.org
+rt-jvs-comment-real:	postmaster@lojban.org
+rt-moz:			postmaster@lojban.org
+rt-moz-real:		postmaster@lojban.org
+rt-moz-comment:		postmaster@lojban.org
+rt-moz-comment-real:	postmaster@lojban.org
+rt-board:		postmaster@lojban.org
+rt-board-real:		postmaster@lojban.org
+rt-board-comment:	postmaster@lojban.org
+rt-board-comment-real:	postmaster@lojban.org
+rt-phpbb:               postmaster@lojban.org
+rt-phpbb-comment:       postmaster@lojban.org
+rt-phpwiki:             postmaster@lojban.org
+rt-phpwiki-comment:     postmaster@lojban.org
+rt-twiki:               postmaster@lojban.org
+rt-twiki-comment:       postmaster@lojban.org
+
+rlpowell: robinleepowell@gmail.com
+*: :fail: No such user here.  Contact rlpowell@lojban.org for assistance.

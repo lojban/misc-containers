@@ -1,0 +1,38 @@
+<%= "\n"*30 %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+<%= "# YOU ARE IN THE WRONG PLACE use the ERB file" %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+
+FROM fedora:34
+
+# *************** WARNING
+# DO NOT change the exim user's UID: Fedora exim wants to setuid to "93" specifically, by ID; changing the exim user will just cause confusion and heartache
+#
+# (This is the default for how exim is built, so it's not obvious that using non-Fedora exim would help, unless we want to build it ourselves.)
+#
+# To make everything work, the running user's UID on the host is mapped to UID 93 in the container.
+#
+# For further discussion see containers/exim/config
+# *************** WARNING
+
+RUN dnf -y install --best --allowerasing findutils curl vim-minimal less tzdata glibc-all-langpacks procps-ng psutils mailx swaks exim patch openssl hostname mhonarc && dnf clean all
+
+COPY misc/exim-gen-cert.sh /usr/local/bin/exim-gen-cert.sh
+
+COPY misc/aliases /etc/aliases
+
+COPY misc/exim.conf.patch /etc/exim/
+RUN cat /etc/exim/exim.conf.patch | patch /etc/exim/exim.conf
+
+# Get all our logs to show up in docker output
+RUN ln -sf /dev/stdout /var/log/exim/main.log && \
+    ln -sf /dev/stdout /var/log/exim/reject.log && \
+    ln -sf /dev/stderr /var/log/exim/panic.log
+
+# MHonArc setup bits
+COPY misc/indexerc_mhonarc /usr/local/etc/mhonarc/indexer.mrc
+COPY misc/mhonarc_update.sh /usr/local/bin/mhonarc_update.sh
+
+ENV TZ America/Los_Angeles
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
