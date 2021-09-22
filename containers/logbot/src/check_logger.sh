@@ -2,7 +2,7 @@
 
 exec 2>&1
 
-set -x
+# set -x
 
 # Cron's path tends to suck
 export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
@@ -51,13 +51,13 @@ rm irclogs.zip all_logs.txt
 
 touch all_logs.txt
 
-set +x
+# set +x
 # Print out the directory of all files (that is: print all dirs with actual files in them)
 for dir in $(find jbosnu/ lojban/ -type f -printf "%h\n" | sort -d | uniq)
 do
   cat $(find $dir/ -type f | sort -d) >>/srv/lojban/irclogs/all_logs.txt.new
 done
-set -x
+# set -x
 
 cat /srv/lojban/irclogs/all_logs.txt.new | grep -av '^\*' | grep -av '^<[^.]*.freenode.net> ' >/srv/lojban/irclogs/all_logs.txt
 rm /srv/lojban/irclogs/all_logs.txt.new
