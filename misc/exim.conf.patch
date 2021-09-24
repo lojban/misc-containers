@@ -1,5 +1,5 @@
 --- /home/spdrata/scratch/exim.conf.upstream	2021-05-24 03:11:20.000000000 -0700
-+++ /home/spdrata/scratch/exim.conf.mine	2021-09-14 16:26:07.982385010 -0700
++++ /home/spdrata/scratch/exim.conf.mine	2021-09-22 07:14:29.121789360 -0700
 @@ -36,6 +36,69 @@
  ########### IMPORTANT ########## IMPORTANT ########### IMPORTANT ###########
  
@@ -392,7 +392,7 @@
  
  
  ######################################################################
-@@ -952,25 +1085,24 @@
+@@ -952,25 +1085,27 @@
  
  remote_smtp:
    driver = smtp
@@ -409,6 +409,9 @@
 +  ### BEGIN LOCAL MODIFICATION
 +  # Muni sends bad mail, apparently
 +  # message_size_limit = ${if > {$max_received_linelength}{998} {1}{0}}
++  #
++  # Docker hosts look bad for HELO
++  helo_data = mail.lojban.org
 +  ### END LOCAL MODIFICATION
  
  # This transport invokes procmail to deliver mail
@@ -429,7 +432,7 @@
    initgroups
    return_output
  
-@@ -983,7 +1115,10 @@
+@@ -983,7 +1118,13 @@
  
  smarthost_smtp:
    driver = smtp
@@ -437,11 +440,14 @@
 +  ### BEGIN LOCAL MODIFICATION
 +  # Muni sends bad mail, apparently
 +  # message_size_limit = ${if > {$max_received_linelength}{998} {1}{0}}
++  #
++  # Docker hosts look bad for HELO
++  helo_data = mail.lojban.org
 +  ### END LOCAL MODIFICATION
    multi_domain
    #
  .ifdef _HAVE_TLS
-@@ -1020,8 +1155,12 @@
+@@ -1020,8 +1161,12 @@
  # show how this can be done.
  
  local_delivery:
@@ -455,7 +461,7 @@
    delivery_date_add
    envelope_to_add
    return_path_add
-@@ -1038,8 +1177,18 @@
+@@ -1038,8 +1183,18 @@
  # section above.
  
  address_pipe:
@@ -475,7 +481,7 @@
  
  
  # This transport is used for handling deliveries directly to files that are
-@@ -1051,6 +1200,15 @@
+@@ -1051,6 +1206,15 @@
    envelope_to_add
    return_path_add
  
