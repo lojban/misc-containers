@@ -1,0 +1,7 @@
+description="container for backing up copies of Lojbanic github stuff"
+needs_network=true
+name=ghbackup
+version=1
+run_args="-v $maindir/shared_data/srv_lojban:/srv/lojban"
+# This container only exists to have a cron job run against it
+run_program='bash -c "while :; do sleep 999; done"'

@@ -1,0 +1,13 @@
+<%= "\n"*30 %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+<%= "# YOU ARE IN THE WRONG PLACE use the ERB file" %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+
+FROM docker.io/library/ruby:2.7
+
+COPY misc/backup_lojban_github_repos /usr/local/bin/
+
+# Make a global git config and copy it in to place
+# for the regular user
+RUN git config --global pull.ff only
+RUN cp /root/.gitconfig /.gitconfig

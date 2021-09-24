@@ -1,3 +1,5 @@
 bundle=drata
 web_port=20280
 pod_args="-p $web_port:$web_port -p 20225:20225 -p 20265:20265"
+# Ignore erb files in the github backusp
+template_find='-name shared_data -prune -o '

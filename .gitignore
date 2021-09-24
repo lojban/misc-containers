@@ -15,6 +15,7 @@ misc/ssmtp.conf
 containers/clamav/Dockerfile
 containers/exim/Dockerfile
 containers/sa/Dockerfile
+containers/ghbackup/Dockerfile
 
 shared_data/
 
