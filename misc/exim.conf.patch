@@ -1,6 +1,6 @@
 --- /home/spdrata/scratch/exim.conf.upstream	2021-05-24 03:11:20.000000000 -0700
-+++ /home/spdrata/scratch/exim.conf.mine	2021-09-22 07:14:29.121789360 -0700
-@@ -36,6 +36,69 @@
++++ /home/spdrata/scratch/exim.conf.mine	2021-11-01 22:03:23.320158049 -0700
+@@ -36,6 +36,51 @@
  ########### IMPORTANT ########## IMPORTANT ########### IMPORTANT ###########
  
  
@@ -43,34 +43,16 @@
 +
 +# Proxy from haproxy
 +#
-+# This line:
-+#
-+# 	hosts_proxy = 192.168.123.119
-+#
-+# doesn't work because everything in the container appears to come from the
-+# same IP (that of the container host -_-;)
-+#
-+# This means all connections *must* come through haproxy, or through
-+# something else that implements PROXY protocol over SMTP; regular SMTP
-+# simply won't work.
-+#
-+# It *should* be possible to work around this by setting up another container
-+# in the pod that just runs nc or socat or something to forward packets to the
-+# exim container; the exim container would then see stuff from that container
-+# as coming from a different IP, you then bind different ports into the
-+# forwarding container and now you have ports that are normal SMTP and ports
-+# that are PROXY protocol SMTP.
-+#
-+# That's a lot of work, though, so I haven't done it.
-+#
-+hosts_proxy = 10.0.0.0/8
++# Note that this didn't used to work, but the slirp4netns in the
++# config seems to make it work?, no idea why
++hosts_proxy = 192.168.123.119
 +
 +###   END LOCAL MODIFICATION
 +
  
  ######################################################################
  #                               MACROS                               #
-@@ -67,9 +130,9 @@
+@@ -67,9 +112,9 @@
  # +local_domains, +relay_to_domains, and +relay_from_hosts, respectively. They
  # are all colon-separated lists:
  
@@ -82,7 +64,7 @@
  # (We rely upon hostname resolution working for localhost, because the default
  # uncommented configuration needs to work in IPv4-only environments.)
  
-@@ -138,7 +201,7 @@
+@@ -138,7 +183,7 @@
  # of what to set for other virus scanners. The second modification is in the
  # acl_check_data access control list (see below).
  
@@ -91,7 +73,7 @@
  
  
  # For spam scanning, there is a similar option that defines the interface to
-@@ -146,13 +209,7 @@
+@@ -146,13 +191,7 @@
  # is shown in this commented example. As for virus scanning, you must also
  # modify the acl_check_data access control list to enable spam scanning.
  
@@ -106,7 +88,7 @@
  
  
  # If Exim is compiled with support for TLS, you may want to enable the
-@@ -188,8 +245,14 @@
+@@ -188,8 +227,14 @@
  # them you should also allow TLS-on-connect on the traditional but
  # non-standard port 465.
  
@@ -123,7 +105,7 @@
  
  
  # Specify the domain you want to be added to all unqualified addresses
-@@ -318,9 +381,9 @@
+@@ -318,9 +363,9 @@
  # Unless you run a high-volume site you probably want more logging
  # detail than the default.  Adjust to suit.
  
@@ -136,7 +118,7 @@
  
  # If you want Exim to support the "percent hack" for certain domains,
  # uncomment the following line and provide a list of domains. The "percent
-@@ -495,25 +558,9 @@
+@@ -495,25 +540,9 @@
    accept  local_parts   = postmaster
            domains       = +local_domains
  
@@ -165,7 +147,7 @@
    # Accept if the message comes from one of the hosts for which we are an
    # outgoing relay. It is assumed that such hosts are most likely to be MUAs,
    # so we set control=submission to make Exim treat the message as a
-@@ -553,6 +600,28 @@
+@@ -553,6 +582,28 @@
    require message       = nice hosts say HELO first
            condition     = ${if def:sender_helo_name}
  
@@ -194,7 +176,7 @@
    # Insist that any other recipient address that we accept is either in one of
    # our local domains, or is in a domain for which we explicitly allow
    # relaying. Any other domain is rejected as being unacceptable for relaying.
-@@ -651,12 +720,15 @@
+@@ -651,12 +702,15 @@
  
  acl_check_data:
  
@@ -216,7 +198,7 @@
  
    # Deny if the headers contain badly-formed addresses.
    #
-@@ -680,11 +752,29 @@
+@@ -680,11 +734,29 @@
    warn    condition  = ${if !def:h_Message-ID: {1}}
            set acl_m_greylistreasons = Message lacks Message-Id: header. Consult RFC2822.\n$acl_m_greylistreasons
  
@@ -249,7 +231,7 @@
  
    # Bypass SpamAssassin checks if the message is too large.
    #
-@@ -707,23 +797,32 @@
+@@ -707,23 +779,32 @@
    # and accept the mail if that happens. Add an X-Spam-Flag: header if the SA
    # score exceeds the SA system threshold.
    #
@@ -297,7 +279,7 @@
  
    # Trigger greylisting (if enabled) if the SpamAssassin score is greater than 0.5
    #
-@@ -758,6 +857,7 @@
+@@ -758,6 +839,7 @@
                          {${lc:$mime_filename}} \
                          {\N(\.exe|\.pif|\.bat|\.scr|\.lnk|\.com)$\N} \
                       {1}{0}}
@@ -305,7 +287,7 @@
  
    accept
  
-@@ -858,12 +958,16 @@
+@@ -858,12 +940,16 @@
  # to set up different ones for pipe and file deliveries from aliases.
  
  system_aliases:
@@ -322,7 +304,7 @@
    pipe_transport = address_pipe
  
  
-@@ -894,22 +998,34 @@
+@@ -894,22 +980,34 @@
  # up an auto-reply, respectively.
  
  userforward:
@@ -359,7 +341,7 @@
    require_files = ${local_part}:+${home}/.procmailrc:/usr/bin/procmail
    transport = procmail
    no_verify
-@@ -923,13 +1039,30 @@
+@@ -923,13 +1021,30 @@
  # in the same way as xxxx@your.domain by this router.
  
  localuser:
@@ -392,7 +374,7 @@
  
  
  ######################################################################
-@@ -952,25 +1085,27 @@
+@@ -952,25 +1067,33 @@
  
  remote_smtp:
    driver = smtp
@@ -412,6 +394,12 @@
 +  #
 +  # Docker hosts look bad for HELO
 +  helo_data = mail.lojban.org
++
++  # DKIM
++  dkim_domain = lojban.org
++  dkim_selector = 202111020436
++  dkim_private_key = /etc/exim/dkim.private
++  dkim_canon = relaxed
 +  ### END LOCAL MODIFICATION
  
  # This transport invokes procmail to deliver mail
@@ -432,7 +420,7 @@
    initgroups
    return_output
  
-@@ -983,7 +1118,13 @@
+@@ -983,7 +1106,13 @@
  
  smarthost_smtp:
    driver = smtp
@@ -447,7 +435,7 @@
    multi_domain
    #
  .ifdef _HAVE_TLS
-@@ -1020,8 +1161,12 @@
+@@ -1020,8 +1149,12 @@
  # show how this can be done.
  
  local_delivery:
@@ -461,7 +449,7 @@
    delivery_date_add
    envelope_to_add
    return_path_add
-@@ -1038,8 +1183,18 @@
+@@ -1038,8 +1171,18 @@
  # section above.
  
  address_pipe:
@@ -481,7 +469,7 @@
  
  
  # This transport is used for handling deliveries directly to files that are
-@@ -1051,6 +1206,15 @@
+@@ -1051,6 +1194,15 @@
    envelope_to_add
    return_path_add
  

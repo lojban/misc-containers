@@ -16,6 +16,8 @@ containers/clamav/Dockerfile
 containers/exim/Dockerfile
 containers/sa/Dockerfile
 containers/ghbackup/Dockerfile
+misc/dkim.private
+misc/dkim.public
 
 shared_data/
 
