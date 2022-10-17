@@ -1,5 +1,5 @@
---- /home/spdrata/scratch/exim.conf.upstream	2021-05-24 03:11:20.000000000 -0700
-+++ /home/spdrata/scratch/exim.conf.mine	2021-11-01 22:03:23.320158049 -0700
+--- exim.conf.upstream	2021-05-24 03:11:20.000000000 -0700
++++ exim.conf.mine	2022-07-18 19:47:52.256248227 -0700
 @@ -36,6 +36,51 @@
  ########### IMPORTANT ########## IMPORTANT ########### IMPORTANT ###########
  
@@ -287,6 +287,15 @@
  
    accept
  
+@@ -823,7 +905,7 @@
+   driver = dnslookup
+   domains = ! +local_domains
+   transport = remote_smtp
+-  ignore_target_hosts = 0.0.0.0 : 127.0.0.0/8
++  ignore_target_hosts = 0.0.0.0 : 127.0.0.0/8 : 192.168.123.0/24 : 10.0.0.0/8
+ # if ipv6-enabled then instead use:
+ # ignore_target_hosts = <; 0.0.0.0 ; 127.0.0.0/8 ; ::1
+   no_more
 @@ -858,12 +940,16 @@
  # to set up different ones for pipe and file deliveries from aliases.
  
