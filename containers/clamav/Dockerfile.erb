@@ -15,18 +15,18 @@ FROM fedora:34
 
 RUN dnf -y install --best --allowerasing findutils curl vim-minimal less tzdata glibc-all-langpacks procps-ng psutils mailx swaks exim-clamav patch hostname openssl clamd clamav-update && dnf clean all
 
-# Make the exim and clam users match our user; makes things way easier
+# Make the clam users match our user; makes things way easier
 
-RUN for user in exim mail clamupdate clamscan ; \
+RUN for user in mail clamupdate clamscan ; \
 do \
-find / -xdev -user $user -print0 | xargs -r -0 chown <%= userid %> ; \
-usermod -o -u <%= userid %> $user ; \
+find / -xdev -user $user -print0 | xargs -r -0 chown 93 ; \
+usermod -o -u 93 $user ; \
 done
 
-RUN for group in exim mail clamupdate virusgroup clamscan ; \
+RUN for group in mail clamupdate virusgroup clamscan ; \
 do \
-find / -xdev -group $group -print0 | xargs -r -0 chgrp <%= groupid %> ; \
-groupmod -o -g <%= groupid %> $group ; \
+find / -xdev -group $group -print0 | xargs -r -0 chgrp 93 ; \
+groupmod -o -g 93 $group ; \
 done
 
 RUN sed -i -r -e 's/^#TCPAddr .*/TCPAddr 127.0.0.1/' -e 's/^#TCPSocket .*/TCPSocket 3310/' -e 's/^\s*Log/# Log/g' /etc/clamd.d/exim.conf

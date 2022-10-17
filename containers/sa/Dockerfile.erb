@@ -15,8 +15,20 @@ FROM fedora:34
 
 RUN dnf -y install --best --allowerasing findutils curl vim-minimal less tzdata glibc-all-langpacks procps-ng psutils mailx swaks patch spamassassin && dnf clean all
 
+RUN for user in mail nobody ; \
+do \
+find / -xdev -user $user -print0 | xargs -r -0 chown 93 ; \
+usermod -o -u 93 $user ; \
+done
+
+RUN for group in mail nobody ; \
+do \
+find / -xdev -group $group -print0 | xargs -r -0 chgrp 93 ; \
+groupmod -o -g 93 $group ; \
+done
+
 RUN mkdir /.spamassassin 
-RUN chown -R <%= userid %>:<%= groupid %> /.spamassassin /etc/mail/spamassassin/
+RUN chown -R 93:93 /.spamassassin /etc/mail/spamassassin/
 
 ENV TZ America/Los_Angeles
 ENV LANG en_US.UTF-8

@@ -1,8 +1,41 @@
 bundle=drata
 web_port=20280
+# OK, so this uidmap thing.
+#
+# First of all, it's specific to the exim container, but it's here rather than
+# on the container because uidmaps are a function of the pod; see
+# https://github.com/containers/podman/issues/12669 .  As to what it's for:
+#
+# Fedora exim wants to setuid to "93" specifically.  Not the exim
+# user's uid, just "93"; it's baked in at build time (this appears
+# to be standard for exim, not just Fedora).
+#
+# The uidmap bits here mean "map 0-92 in the container to 1-93 on the
+# host, map 93 in the container to 0 on the host, and map 94-[lots]
+# in the container to 95-[lots] on the host", which sounds wacky
+# except that per
+# https://docs.podman.io/en/latest/markdown/podman-run.1.html , in
+# rootless mode "0 on the host" means "the UID of the user", and "1
+# on the host" means "the first subuid of the user", and so on.
+#
+# So the net effect is that UID 93 in the container (the exim user)
+# runs as the calling user (spdrata) on the host.
+#
+# exim *starts* as root, so anything that exim writes out as root
+# will go to the wrong uid, but we can't actually fix that, and it
+# mostly doesn't seem to do that at all.
+#
+# The DNS arg is because for some reason the slirp4netns entry in
+# resolv.conf, 10.0.2.3, doesn't work with this setup, no idea why.
+#
+no_userns="true"
+pod_args="--dns=192.168.123.254,8.8.8.8 -p $web_port:$web_port -p 20225:20225 -p 20265:20265 --uidmap 0:1:92 --uidmap 93:0:1 --uidmap 94:94:8192"
 # Apparently we need to present as jukni.lojban.org for DKIM or
 # DMARC?  I forgot to write down why at the time, but that seems to
 # by why we're doing this outbound_addr
-pod_args="-p $web_port:$web_port -p 20225:20225 -p 20265:20265 --network slirp4netns:port_handler=slirp4netns,outbound_addr=192.168.123.132"
+#
+# Note that the comma is required
+#
+pod_slirp4netns_extras=",outbound_addr=192.168.123.132"
 # Ignore erb files in the github backups
 template_find='-name shared_data -prune -o '

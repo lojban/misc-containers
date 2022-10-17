@@ -11,8 +11,8 @@ RUN dnf -y install --best --allowerasing httpd findutils curl vim-minimal less &
 RUN rm /etc/httpd/conf.d/welcome.conf
 
 # Make the web user match our user; makes things way easier
-RUN usermod -u <%= userid %> apache
-RUN groupmod -g <%= groupid %> apache
+RUN usermod -u 93 apache
+RUN groupmod -g 93 apache
 RUN find / -xdev -user 48 -print0 | xargs -0 chown apache
 RUN find / -xdev -group 48 -print0 | xargs -0 chgrp apache
 
