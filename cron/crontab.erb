@@ -6,11 +6,12 @@
 <%= "\n"*30 %>
 LANG=en_US.UTF-8
 MAILTO=webmaster@lojban.org
+MAILFROM=spdrata@lojban.org
 
 # Rebuild images every once in a while so we don't have surprises after a reboot of the host
 14 */5 * * * <%= maindir %>/rebuild_images.sh
 
-25 * * * * <%= maindir %>/cron/cron-run-inside.sh logbot /src/check_logger.sh
+25 */8 * * * <%= maindir %>/cron/cron-run-inside.sh logbot /src/check_logger.sh
 
 # Daily backups; 7 day retention
 11 11 * * * <%= maindir %>/self_backup.sh zh1785@zh1785.rsync.net '+day-\%w'
