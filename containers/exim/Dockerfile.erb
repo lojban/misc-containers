@@ -21,8 +21,17 @@ COPY misc/exim-gen-cert.sh /usr/local/bin/exim-gen-cert.sh
 
 COPY misc/aliases /etc/aliases
 
-COPY misc/exim.conf.patch /etc/exim/
-RUN cat /etc/exim/exim.conf.patch | patch /etc/exim/exim.conf
+# This is all going to seem like a weird and very round-about way of
+# doing it; why not just lay down the new conf file?  This is
+# because as we update Fedora and/or Exim, the upstream conf file
+# changes, and we are often very interested in those changes as they
+# can represent new best practices or features, so this is basically
+# a test for "did the upstream conf file change enough that we need
+# to review it?", because if it did the patch will fail.
+COPY misc/exim.conf.mine /etc/exim/
+COPY misc/exim.conf.upstream /etc/exim/
+RUN diff -u /etc/exim/exim.conf.mine /etc/exim/exim.conf.upstream > /etc/exim/exim.conf.patch
+RUN cat /etc/exim/exim.conf.patch | patch -l /etc/exim/exim.conf
 
 # Get all our logs to show up in docker output
 RUN ln -sf /dev/stdout /var/log/exim/main.log && \
