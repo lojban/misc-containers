@@ -102,8 +102,10 @@ null: /dev/null
 
 root:		postmaster@lojban.org
 
-robin:          rlpowell@lojban.org
-turgul:         rlpowell@lojban.org
+robin:          rlpowell@digitalkingdom.org
+turgul:         rlpowell@digitalkingdom.org
+# robin:          rlpowell@lojban.org
+# turgul:         rlpowell@lojban.org
 
 #**************************************************************
 # END system aliases (however unlikely some of them might be)
@@ -115,8 +117,10 @@ turgul:         rlpowell@lojban.org
 # System Alias Final Destination
 #****************
 
-postmaster: rlpowell@lojban.org
-info: rlpowell@lojban.org
+postmaster: rlpowell@digitalkingdom.org
+info: rlpowell@digitalkingdom.org
+# postmaster: rlpowell@lojban.org
+# info: rlpowell@lojban.org
 
 #*******
 # jbovlaste
@@ -133,8 +137,8 @@ jbovlaste-admin: /srv/lojban/plain/jbovlaste-admin/, webmaster@lojban.org
 president: /srv/lojban/plain/special-president/, comcaresvcs@gmail.com
 vice-president: vp@lojban.org
 vp: /srv/lojban/plain/special-vp/, lojbab@lojban.org
-secretary: /srv/lojban/plain/special-secretary/, shunpiker@gmail.com, robinleepowell@gmail.com
-treasurer: /srv/lojban/plain/special-treasurer/, shunpiker@gmail.com, robinleepowell@gmail.com
+secretary: /srv/lojban/plain/special-secretary/, shunpiker@gmail.com, rlpowell@digitalkingdom.org
+treasurer: /srv/lojban/plain/special-treasurer/, shunpiker@gmail.com, rlpowell@digitalkingdom.org
 fulfillment: /srv/lojban/plain/special-fulfillment/, lojbab@lojban.org
 
 #*******
@@ -160,7 +164,8 @@ bangu: gleki.is.my.name@gmail.com
 #*******
 # Me
 #*******
-cons: rlpowell@lojban.org
+cons: rlpowell@digitalkingdom.org
+# cons: rlpowell@lojban.org
 
 # bitl doesn't appear be around anymore
 bitl: /dev/null
@@ -341,4 +346,4 @@ rt-twiki:               postmaster@lojban.org
 rt-twiki-comment:       postmaster@lojban.org
 
 rlpowell: robinleepowell@gmail.com
-*: :fail: No such user here.  Contact rlpowell@lojban.org for assistance.
+*: :fail: No such user here.  Contact robinleepowell@gmail.com for assistance.
