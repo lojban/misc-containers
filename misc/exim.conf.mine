@@ -94,6 +94,10 @@ hosts_proxy = 192.168.123.119
 #
 # ROUTER_SMARTHOST=MAIL.HOSTNAME.FOR.CENTRAL.SERVER.EXAMPLE
 
+### BEGIN LOCAL MODIFICATION
+SRS_SECRET = ##SRS_SECRET##
+### END LOCAL MODIFICATION
+
 ######################################################################
 #                    MAIN CONFIGURATION SETTINGS                     #
 ######################################################################
@@ -888,7 +892,6 @@ begin routers
 #   domains = ! +local_domains
 #   transport = remote_smtp
 
-
 # This router can be used when you want to send all mail to a
 # server which handles DNS lookups for you; an ISP will typically run such
 # a server for their customers.  The hostname in route_data comes from the
@@ -924,7 +927,12 @@ smarthost:
 dnslookup:
   driver = dnslookup
   domains = ! +local_domains
-  transport = remote_smtp
+### BEGIN LOCAL MODIFICATION
+# SRS outbound support; see "Example usage" at https://www.exim.org/exim-html-current/doc/html/spec_html/ch-dkim_spf_srs_and_dmarc.html
+  transport = ${if eq {$local_part@$domain} \
+                      {$original_local_part@$original_domain} \
+                   {remote_smtp} {remote_srs_smtp}}
+### END LOCAL MODIFICATION
   ignore_target_hosts = 0.0.0.0 : 127.0.0.0/8 : 192.168.123.0/24 : 10.0.0.0/8
 # if ipv6-enabled then instead use:
 # ignore_target_hosts = <; 0.0.0.0 ; 127.0.0.0/8 ; ::1
@@ -934,6 +942,25 @@ dnslookup:
 # off-site mail.
 .endif
 
+### BEGIN LOCAL MODIFICATION
+# SRS inbound support; see "Example usage" at https://www.exim.org/exim-html-current/doc/html/spec_html/ch-dkim_spf_srs_and_dmarc.html
+inbound_srs:
+  debug_print = "R: inbound_srs for $local_part@$domain_data"
+  driver =    redirect
+  domains =   +local_domains
+  # detect inbound bounces which are SRS'd, and decode them
+  condition = ${if inbound_srs {$local_part} {SRS_SECRET}}
+  data =      $srs_recipient
+
+inbound_srs_failure:
+  debug_print = "R: inbound_srs_failure for $local_part@$domain_data"
+  driver =    redirect
+  domains =   +local_domains
+  # detect inbound bounces which look SRS'd but are invalid
+  condition = ${if inbound_srs {$local_part} {}}
+  allow_fail
+  data =      :fail: Invalid SRS recipient address
+### END LOCAL MODIFICATION
 
 # The remaining routers handle addresses in the local domain(s), that is those
 # domains that are defined by "domainlist local_domains" above.
@@ -1079,6 +1106,24 @@ system_aliases_again:
 
 begin transports
 
+### BEGIN LOCAL MODIFICATION
+# SRS outbound support; see "Example usage" at https://www.exim.org/exim-html-current/doc/html/spec_html/ch-dkim_spf_srs_and_dmarc.html
+remote_srs_smtp:
+  driver = smtp
+  message_linelength_limit = 20000
+  max_rcpt =            1
+  headers_add = X-Forwarded-For: $reply_address
+  headers_remove = Reply-To
+  headers_add = Reply-To: $reply_address
+  return_path =         ${srs_encode {SRS_SECRET} {$return_path} {$original_domain}}
+  headers_rewrite = *@* "$return_path" f
+
+  # DKIM
+  dkim_domain = lojban.org
+  dkim_selector = 202111020436
+  dkim_private_key = /etc/exim/dkim.private
+  dkim_canon = relaxed
+###   END LOCAL MODIFICATION
 
 # This transport is used for delivering messages over SMTP connections.
 

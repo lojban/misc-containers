@@ -15,7 +15,10 @@ FROM fedora:37
 # For further discussion see containers/exim/config
 # *************** WARNING
 
-RUN dnf -y install --best --allowerasing findutils curl vim-minimal less tzdata glibc-all-langpacks procps-ng psutils mailx swaks exim patch openssl hostname mhonarc && dnf clean all
+# Locally produced exim ;_; with SRS, from /usr/src/exim-srs on stodi
+COPY misc/exim-4.96-6.dk_srs.fc37.x86_64.rpm /tmp/
+
+RUN dnf -y install --best --allowerasing findutils curl vim-minimal less tzdata glibc-all-langpacks procps-ng psutils mailx swaks /tmp/exim-4.96-6.dk_srs.fc37.x86_64.rpm patch openssl hostname mhonarc && dnf clean all
 
 COPY misc/exim-gen-cert.sh /usr/local/bin/exim-gen-cert.sh
 
@@ -37,6 +40,9 @@ RUN cat /etc/exim/exim.conf.patch | patch -l /etc/exim/exim.conf
 RUN ln -sf /dev/stdout /var/log/exim/main.log && \
     ln -sf /dev/stdout /var/log/exim/reject.log && \
     ln -sf /dev/stderr /var/log/exim/panic.log
+
+# Update the SRS secret with our actual secret
+RUN sed -i 's/##SRS_SECRET##/<%= srs_secret %>/g' /etc/exim/exim.conf
 
 # MHonArc setup bits
 COPY misc/indexerc_mhonarc /usr/local/etc/mhonarc/indexer.mrc
