@@ -112,9 +112,11 @@ hosts_proxy = 192.168.123.119
 # +local_domains, +relay_to_domains, and +relay_from_hosts, respectively. They
 # are all colon-separated lists:
 
+### BEGIN LOCAL MODIFICATION
 domainlist local_domains = @ : localhost : localhost.localdomain : lojban.org : lojban.com : mail.lojban.org : mail.lojban.com
 domainlist relay_to_domains =
 hostlist   relay_from_hosts = @[] : @ : 127.0.0.1 : 173.13.139.238/29 : 192.168.123.0/24 : ::1 : localhost
+### END LOCAL MODIFICATION
 # (We rely upon hostname resolution working for localhost, because the default
 # uncommented configuration needs to work in IPv4-only environments.)
 
@@ -183,7 +185,9 @@ acl_smtp_mime =         acl_check_mime
 # of what to set for other virus scanners. The second modification is in the
 # acl_check_data access control list (see below).
 
+### BEGIN LOCAL MODIFICATION
 av_scanner = clamd:127.0.0.1 3310
+### END LOCAL MODIFICATION
 
 
 # For spam scanning, there is a similar option that defines the interface to
@@ -191,7 +195,15 @@ av_scanner = clamd:127.0.0.1 3310
 # is shown in this commented example. As for virus scanning, you must also
 # modify the acl_check_data access control list to enable spam scanning.
 
+### BEGIN LOCAL MODIFICATION
 spamd_address = 127.0.0.1 25783
+### END LOCAL MODIFICATION
+
+
+# Set the default sqlite database file for greylisting. Uncomment this
+# if you use the greylisting ACLs defined below.
+
+# sqlite_dbfile = /var/spool/exim/db/greylist.db
 
 
 # If Exim is compiled with support for TLS, you may want to change the
@@ -550,8 +562,25 @@ acl_check_rcpt:
           domains       = +local_domains
 
   ### BEGIN LOCAL MODIFICATION
-  # sender verify moved downwards; this is to allow emails from hosts we trust even if the sender appears to be bad (i.e. bot cron jobs and the like)
+  # sender verify moved downwards; this is to allow emails from
+  # hosts we trust even if the sender appears to be bad (i.e. bot
+  # cron jobs and the like)
   ###   END LOCAL MODIFICATION
+
+  # Reject all RCPT commands after too many bad recipients
+  # This is partly a defense against spam abuse and partly attacker abuse.
+  # Real senders should manage, by the time they get to 10 RCPT directives,
+  # to have had at least half of them be real addresses.
+  #
+  # This is a lightweight check and can protect you against repeated
+  # invocations of more heavy-weight checks which would come after it.
+
+  deny    condition     = ${if and {\
+                        {>{$rcpt_count}{10}}\
+                        {<{$recipients_count}{${eval:$rcpt_count/2}}} }}
+          message       = Rejected for too many bad recipients
+          logwrite      = REJECT [$sender_host_address]: bad recipient count high [${eval:$rcpt_count-$recipients_count}]
+
   # Accept if the message comes from one of the hosts for which we are an
   # outgoing relay. It is assumed that such hosts are most likely to be MUAs,
   # so we set control=submission to make Exim treat the message as a
@@ -587,26 +616,13 @@ acl_check_rcpt:
           control       = dmarc_disable_verify
 
   ### BEGIN LOCAL MODIFICATION
-  # sender verify moved downwards; this is to allow emails from hosts we trust even if the sender appears to be bad (i.e. bot cron jobs and the like)
-  ###   END LOCAL MODIFICATION
+  # sender verify moved to here; see above for why.
+
   # Deny unless the sender address can be routed. For proper verification of the
   # address, read the documentation on callouts and add the /callout modifier.
 
   require verify        = sender
-
-  # Reject all RCPT commands after too many bad recipients
-  # This is partly a defense against spam abuse and partly attacker abuse.
-  # Real senders should manage, by the time they get to 10 RCPT directives,
-  # to have had at least half of them be real addresses.
-  #
-  # This is a lightweight check and can protect you against repeated
-  # invocations of more heavy-weight checks which would come after it.
-
-  deny    condition     = ${if and {\
-                        {>{$rcpt_count}{10}}\
-                        {<{$recipients_count}{${eval:$rcpt_count/2}}} }}
-          message       = Rejected for too many bad recipients
-          logwrite      = REJECT [$sender_host_address]: bad recipient count high [${eval:$rcpt_count-$recipients_count}]
+  ###   END LOCAL MODIFICATION
 
   # Insist that any other recipient address that we accept is either in one of
   # our local domains, or is in a domain for which we explicitly allow
@@ -1071,11 +1087,7 @@ remote_smtp:
 .ifdef _HAVE_TLS_RESUME
   tls_resumption_hosts = *
 .endif
-
-  ### BEGIN LOCAL MODIFICATION
-  # Muni sends bad mail, apparently
-  # message_size_limit = ${if > {$max_received_linelength}{998} {1}{0}}
-  #
+### BEGIN LOCAL MODIFICATION
   # Docker hosts look bad for HELO
   helo_data = mail.lojban.org
 
@@ -1084,7 +1096,15 @@ remote_smtp:
   dkim_selector = 202111020436
   dkim_private_key = /etc/exim/dkim.private
   dkim_canon = relaxed
-  ### END LOCAL MODIFICATION
+### END LOCAL MODIFICATION
+
+# This transport is used for delivering messages over SMTP using the
+# "message submission" port (RFC4409).
+
+remote_msa:
+  driver = smtp
+  port = 587
+  hosts_require_auth = *
 
 
 # This transport invokes procmail to deliver mail
@@ -1112,13 +1132,10 @@ procmail:
 
 smarthost_smtp:
   driver = smtp
-  ### BEGIN LOCAL MODIFICATION
-  # Muni sends bad mail, apparently
-  # message_size_limit = ${if > {$max_received_linelength}{998} {1}{0}}
-  #
+### BEGIN LOCAL MODIFICATION
   # Docker hosts look bad for HELO
   helo_data = mail.lojban.org
-  ### END LOCAL MODIFICATION
+### END LOCAL MODIFICATION
   multi_domain
   #
 .ifdef _HAVE_TLS
