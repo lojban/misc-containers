@@ -30,7 +30,7 @@ COPY misc/aliases /etc/aliases
 # to review it?", because if it did the patch will fail.
 COPY misc/exim.conf.mine /etc/exim/
 COPY misc/exim.conf.upstream /etc/exim/
-RUN diff -u /etc/exim/exim.conf.mine /etc/exim/exim.conf.upstream > /etc/exim/exim.conf.patch
+RUN diff -u /etc/exim/exim.conf.upstream /etc/exim/exim.conf.mine > /etc/exim/exim.conf.patch || true
 RUN cat /etc/exim/exim.conf.patch | patch -l /etc/exim/exim.conf
 
 # Get all our logs to show up in docker output
