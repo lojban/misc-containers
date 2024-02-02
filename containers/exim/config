@@ -7,7 +7,7 @@ version=1
 # master config file.
 #
 # The -t is because of the logging situation; see the top of exim.conf
-run_args="-t -v $maindir/shared_data/var_spool/:/var/spool -v $maindir/shared_data/srv_lojban:/srv/lojban"
+run_args="-t -v $maindir/shared_data/var_spool/:/var/spool -v $maindir/shared_data/srv_lojban:/srv/lojban -v $maindir/shared_data/exim_logs:/var/log/exim"
 
 # The chown here is because we start as root and then switch to the exim user,
 # but that means that /dev/stdout (which points to /proc/self/fd/0) is owned by
