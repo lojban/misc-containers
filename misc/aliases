@@ -273,7 +273,7 @@ llg-members: :fail: This list has been shut down.  Bug postmaster@lojban.org if 
 
 # Aliases for 'llg-board' mailing list.
 llg-board-archive:  /srv/lojban/plain/llg-board/
-llg-board: /srv/lojban/plain/llg-board/, comcaresvcs@gmail.com, lojbab@lojban.org, shunpiker@gmail.com, robinleepowell@gmail.com, gleki.is.my.name@gmail.com
+llg-board: /srv/lojban/plain/llg-board/, comcaresvcs@gmail.com, lojbab@lojban.org, shunpiker@gmail.com, rlpowell@digitalkingdom.org, gleki.is.my.name@gmail.com
 
 # Aliases for 'wikidiscuss' mailing list.
 wikidiscuss-archive:  :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
@@ -345,5 +345,5 @@ rt-phpwiki-comment:     postmaster@lojban.org
 rt-twiki:               postmaster@lojban.org
 rt-twiki-comment:       postmaster@lojban.org
 
-rlpowell: robinleepowell@gmail.com
+rlpowell: rlpowell@digitalkingdom.org
 *: :fail: No such user here.  Contact robinleepowell@gmail.com for assistance.
