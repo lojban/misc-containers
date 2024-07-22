@@ -34,3 +34,6 @@ MAILFROM=spdrata@lojban.org
 
 # I have no idea why, but the web instance keeps hanging
 12 */8 * * * systemctl --user restart web
+
+# Report on bad emails
+1 1 * * * <%= maindir %>/misc/check_mail_logs.sh <%= maindir %>/shared_data/exim_logs/main.log 2>&1 | mailx -s 'Daily bad mail check for lojban.org' rlpowell@digitalkingdom.org
