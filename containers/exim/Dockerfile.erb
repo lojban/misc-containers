@@ -35,6 +35,7 @@ COPY misc/exim.conf.mine /etc/exim/
 COPY misc/exim.conf.upstream /etc/exim/
 RUN diff -u /etc/exim/exim.conf.upstream /etc/exim/exim.conf.mine > /etc/exim/exim.conf.patch || true
 RUN cat /etc/exim/exim.conf.patch | patch -l /etc/exim/exim.conf
+RUN sed -i 's/##SMTP2GOPASS##/<%= smtp2go_pass %>/' /etc/exim/exim.conf
 
 # Get all our logs to show up in docker output
 RUN ln -sf /dev/stdout /var/log/exim/main.log && \
@@ -43,6 +44,8 @@ RUN ln -sf /dev/stdout /var/log/exim/main.log && \
 
 # Update the SRS secret with our actual secret
 RUN sed -i 's/##SRS_SECRET##/<%= srs_secret %>/g' /etc/exim/exim.conf
+
+COPY misc/smtp2go_domains.txt /etc/exim/smtp2go_domains.txt
 
 # MHonArc setup bits
 COPY misc/indexerc_mhonarc /usr/local/etc/mhonarc/indexer.mrc

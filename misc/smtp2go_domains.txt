@@ -1,0 +1,4 @@
+digitalkingdom.org: mail.smtp2go.com
+lojban.org: mail.smtp2go.com
+stodi.digitalkingdom.org: mail.smtp2go.com
+lebna.digitalkingdom.org: mail.smtp2go.com

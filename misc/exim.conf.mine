@@ -904,6 +904,28 @@ digitalkingdom:
 # if ipv6-enabled then instead use:
 # ignore_target_hosts = <; 0.0.0.0 ; 127.0.0.0/8 ; ::1
   no_more
+
+# Deliver with smtp2go per
+# https://www.smtp2go.com/setupguide/exim/
+smtp2go_router:
+  driver = manualroute
+  transport = smtp2go_relay
+  domains = ! +local_domains
+  # It's limited to specific domains; see
+  # code/environments/production/modules/email/manifests/exim.pp ;
+  # smtp2go won't allow mail through that's not *from* a known
+  # domain.
+  route_data = ${lookup{$sender_address_domain}lsearch*{/etc/exim/smtp2go_domains.txt}}
+
+# Handle *just* Robin's gmail address, as he often sends email that
+# gets routed through DK to other places
+smtp2go_router_special:
+  driver = manualroute
+  transport = smtp2go_relay
+  domains = ! +local_domains
+  senders = robinleepowell@gmail.com
+  route_data = mail.smtp2go.com
+  no_more
 ### END LOCAL MODIFICATION
 
 .ifdef ROUTER_SMARTHOST
@@ -1114,7 +1136,19 @@ system_aliases_again:
 begin transports
 
 ### BEGIN LOCAL MODIFICATION
-# SRS outbound support; see "Example usage" at https://www.exim.org/exim-html-current/doc/html/spec_html/ch-dkim_spf_srs_and_dmarc.html
+# Deliver everything with smtp2go per
+# https://www.smtp2go.com/setupguide/exim/
+smtp2go_relay:
+  driver = smtp
+  port = 2525
+  hosts_require_auth = $host_address
+  hosts_require_tls = $host_address
+  message_linelength_limit = 20000
+### END LOCAL MODIFICATION
+
+### BEGIN LOCAL MODIFICATION
+# SRS outbound support; this is the thing that hopefully allows forwarding to work in the modern email landscape.
+# see "Example usage" at https://www.exim.org/exim-html-current/doc/html/spec_html/ch-dkim_spf_srs_and_dmarc.html
 remote_srs_smtp:
   driver = smtp
   message_linelength_limit = 20000
@@ -1340,6 +1374,15 @@ begin rewrite
 ######################################################################
 
 begin authenticators
+
+### BEGIN LOCAL MODIFICATION
+# Deliver everything with smtp2go per
+# https://www.smtp2go.com/setupguide/exim/
+smtp2go_login:
+  driver = plaintext
+  public_name = LOGIN
+  hide client_send = : digitalkingdom.org : ##SMTP2GOPASS##
+### END LOCAL MODIFICATION
 
 # This authenticator supports CRAM-MD5 username/password authentication
 # with Exim acting as a _client_, as it might when sending its outgoing
