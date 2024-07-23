@@ -126,7 +126,7 @@ info: rlpowell@digitalkingdom.org
 # jbovlaste
 #*******
 # Saves a plain copy and sends on
-jbovlaste-admin: /srv/lojban/plain/jbovlaste-admin/, webmaster@lojban.org
+jbovlaste-admin: /srv/lojban/plain/jbovlaste-admin/maildir/, webmaster@lojban.org
 
 #*******
 # The board.
@@ -134,17 +134,17 @@ jbovlaste-admin: /srv/lojban/plain/jbovlaste-admin/, webmaster@lojban.org
 # All the "special" boxes are independent because otherwise, due to
 # de-duplication, whoever got the mail first blocked it for everyone
 # else.
-president: /srv/lojban/plain/special-president/, comcaresvcs@gmail.com
+president: /srv/lojban/plain/special-president/maildir/, comcaresvcs@gmail.com
 vice-president: vp@lojban.org
-vp: /srv/lojban/plain/special-vp/, lojbab@lojban.org
-secretary: /srv/lojban/plain/special-secretary/, shunpiker@gmail.com, rlpowell@digitalkingdom.org
-treasurer: /srv/lojban/plain/special-treasurer/, shunpiker@gmail.com, rlpowell@digitalkingdom.org
-fulfillment: /srv/lojban/plain/special-fulfillment/, lojbab@lojban.org
+vp: /srv/lojban/plain/special-vp/maildir/, lojbab@lojban.org
+secretary: /srv/lojban/plain/special-secretary/maildir/, shunpiker@gmail.com, rlpowell@digitalkingdom.org
+treasurer: /srv/lojban/plain/special-treasurer/maildir/, shunpiker@gmail.com, rlpowell@digitalkingdom.org
+fulfillment: /srv/lojban/plain/special-fulfillment/maildir/, lojbab@lojban.org
 
 #*******
 # lojban@ and friends
 #*******
-lojban: /srv/lojban/plain/special-lojban/, secretary@lojban.org, president@lojban.org, vp@lojban.org, noras@cox.net, comcaresvcs@gmail.com, lojbab@lojban.org
+lojban: /srv/lojban/plain/special-lojban/maildir/, secretary@lojban.org, president@lojban.org, vp@lojban.org, noras@cox.net, comcaresvcs@gmail.com, lojbab@lojban.org
 # Mispelling
 lobjan: lojban@lojban.org
 
@@ -186,7 +186,7 @@ lojban-story-bounce: :fail: This list is dead.
 # Aliases for the announcement list
 lojban-announcements: lojban-announcements@googlegroups.com
 lojban-announce: lojban-announcements@googlegroups.com
-lojban-announcements-archive: /srv/lojban/plain/lojban-announcements/
+lojban-announcements-archive: /srv/lojban/plain/lojban-announcements/maildir/
 
 # Aliases for 'lojban-www' mailing list.
 lojban-www: :fail: This list is dead.
@@ -199,7 +199,7 @@ lojban-www-bounce: :fail: This list is dead.
 # Aliases for 'lojban-beginners' mailing list.
 lojban-beginners: lojban-beginners@googlegroups.com
 lojban-beginners-real: lojban-beginners@googlegroups.com
-lojban-beginners-archive:  /srv/lojban/plain/lojban-beginners/
+lojban-beginners-archive:  /srv/lojban/plain/lojban-beginners/maildir/
 lojban-beginners-request: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
 lojban-beginners-repost: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
 lojban-beginners-admins: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
@@ -212,7 +212,7 @@ lojban-in: lojban@googlegroups.com
 lojban-en: lojban@googlegroups.com
 lojban-list: lojban@googlegroups.com
 lojban-list-real: lojban@googlegroups.com
-lojban-list-archive:  /srv/lojban/plain/lojban-list/
+lojban-list-archive:  /srv/lojban/plain/lojban-list/maildir/
 lojban-request: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
 lojban-list-request: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
 lojban-list-test: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
@@ -226,7 +226,7 @@ lojban-list-bounce: :fail: This list is no longer served here; see http://www.lo
 bpfk: bpfk-list@googlegroups.com
 bpfk-announce: bpfk-list@googlegroups.com
 bpfk-announce-real: bpfk-list@googlegroups.com
-bpfk-archive:  /srv/lojban/plain/bpfk/
+bpfk-archive:  /srv/lojban/plain/bpfk/maildir/
 bpfk-announce-request: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
 bpfk-announce-repost: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
 bpfk-announce-admins: :fail: This list is no longer served here; see http://www.lojban.org/tiki/Lojbanic+Forums for the current mailing list address.
@@ -245,35 +245,35 @@ jbofongri-bounce: :fail: This list is dead.
 # lbck, hosted at google groups at
 # http://groups.google.com/group/lojban-lbck?lnk=gcimh
 lbck: lojban-lbck@googlegroups.com
-lbck-archive: /srv/lojban/plain/lbck/
+lbck-archive: /srv/lojban/plain/lbck/maildir/
 
 #*******************************************************************************
 # Lists We Actually Host (i.e. mailman lists)
 #*******************************************************************************
 
 # Aliases for 'lojban-fr' mailing list.
-lojban-fr-archive:  /srv/lojban/plain/lojban-fr/
+lojban-fr-archive:  /srv/lojban/plain/lojban-fr/maildir/
 lojban-fr:  :fail: This list has been shut down.  Bug postmaster@lojban.org if you think that's a mistake.
 
 # Aliases for 'lojban-de' mailing list.
-lojban-de-archive:  /srv/lojban/plain/lojban-de/
+lojban-de-archive:  /srv/lojban/plain/lojban-de/maildir/
 lojban-de:  :fail: This list has been shut down.  Bug postmaster@lojban.org if you think that's a mistake.
 
 # Aliases for 'lojban-es' mailing list.
-lojban-es-archive:  /srv/lojban/plain/lojban-es/
+lojban-es-archive:  /srv/lojban/plain/lojban-es/maildir/
 lojban-es:  :fail: This list has been shut down.  Bug postmaster@lojban.org if you think that's a mistake.
 
 # Aliases for 'jbovlaste' mailing list.
-jbovlaste-archive:  /srv/lojban/plain/jbovlaste/
+jbovlaste-archive:  /srv/lojban/plain/jbovlaste/maildir/
 jbovlaste:  :fail: This list has been shut down.  Bug postmaster@lojban.org if you think that's a mistake.
 
 # Aliases for 'llg-members' mailing list.
-llg-members-archive:  /srv/lojban/plain/llg-members/
+llg-members-archive:  /srv/lojban/plain/llg-members/maildir/
 llg-members: :fail: This list has been shut down.  Bug postmaster@lojban.org if you think that's a mistake.
 
 # Aliases for 'llg-board' mailing list.
-llg-board-archive:  /srv/lojban/plain/llg-board/
-llg-board: /srv/lojban/plain/llg-board/, comcaresvcs@gmail.com, lojbab@lojban.org, shunpiker@gmail.com, rlpowell@digitalkingdom.org, gleki.is.my.name@gmail.com
+llg-board-archive:  /srv/lojban/plain/llg-board/maildir/
+llg-board: /srv/lojban/plain/llg-board/maildir/, comcaresvcs@gmail.com, lojbab@lojban.org, shunpiker@gmail.com, rlpowell@digitalkingdom.org, gleki.is.my.name@gmail.com
 
 # Aliases for 'wikidiscuss' mailing list.
 wikidiscuss-archive:  :fail: This list is dead.  Bug postmaster@lojban.org if you think that's a mistake.
