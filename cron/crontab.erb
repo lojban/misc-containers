@@ -30,7 +30,7 @@ MAILFROM=spdrata@lojban.org
 
 # ghbackup exists only to have this cron job run, which backs up
 # lojbanic github git repos
-19 19 * * * <%= maindir %>/cron/cron-run-inside.sh ghbackup /usr/local/bin/backup_lojban_github_repos /srv/lojban/github_backups/
+19 19 * * * <%= maindir %>/cron/cron-run-inside.sh ghbackup /usr/local/bin/backup_lojban_github_repos /srv/lojban/github_backups/ 2>&1 | fold -w 300
 
 # I have no idea why, but the web instance keeps hanging
 12 */8 * * * systemctl --user restart web
