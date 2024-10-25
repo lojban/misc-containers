@@ -18,6 +18,7 @@ containers/sa/Dockerfile
 containers/ghbackup/Dockerfile
 misc/dkim.private
 misc/dkim.public
+misc/exim.passwd.client
 
 shared_data/
 

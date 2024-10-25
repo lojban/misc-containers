@@ -1378,6 +1378,26 @@ smtp2go_login:
 #  server_condition           = ${if saslauthd{{$1}{$2}{smtp}} {1}}
 #  server_advertise_condition = ${if def:tls_in_cipher }
 
+### BEGIN LOCAL MODIFICATION
+# Lookup auth in a file, but only if TLS is on
+PLAIN:
+  driver                     = plaintext
+  server_set_id              = $auth2
+  server_prompts             = :
+# This version has the passwords in straight-up plain text:
+#
+#  server_condition           = ${lookup{$auth2}lsearch{/etc/exim/passwd.client} \
+#                                  {${if eq{$value}{$auth3} {true} {false}}} {false}}
+
+# THIS IS WHERE AUTHENTICATED SMTP THROUGH US LIVES, that is, an
+# email app can send mail out through the DK server using
+# username+password to do so.  The file is /etc/exim/passwd.client
+#
+# The passwords are hashed with md5, generated like so: echo -n mylongpassword | md5sum
+  server_condition           = ${lookup{$auth2}lsearch{/etc/exim/passwd.client} \
+                                  {${if crypteq{$auth3}{$value} {true} {false}}} {false}}
+  server_advertise_condition = ${if def:tls_in_cipher }
+### END LOCAL MODIFICATION
 
 ######################################################################
 #                   CONFIGURATION FOR local_scan()                   #
