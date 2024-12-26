@@ -9,6 +9,8 @@ URLs=[]
 blob.each { |x| URLs << x['clone_url'] }
 
 backup_dir=ARGV.shift
+uid=ARGV.shift
+gid=ARGV.shift
 
 if ! backup_dir || backup_dir.length < 5
   print "First argument must by the place to store the backups.\n"
@@ -16,6 +18,9 @@ if ! backup_dir || backup_dir.length < 5
 end
 
 URLs.each do |url|
+  # Make it owned by root so git won't complain
+  puts %x{chown -R 0:0 #{backup_dir}}
+
   Dir.chdir backup_dir
 
   short=url.sub( %r{^.*/}, '' ).sub( %r{\.git$}, '' )
@@ -34,6 +39,9 @@ URLs.each do |url|
   unless status =~ %r{nothing to commit, working tree clean}
     puts "!!!!!!! Status check for #{short} failed: #{status}"
   end
+
+  # Put the ownership back
+  puts %x{chown -R #{uid}:#{gid} #{backup_dir}}
 end
 
 puts "lobjan github backup complete"
