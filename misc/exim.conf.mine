@@ -576,7 +576,7 @@ acl_check_rcpt:
   ###   END LOCAL MODIFICATION
   accept  authenticated = *
   ### BEGIN LOCAL MODIFICATION
-  # Local users get to specify a sender
+  # Authenticated users get to specify a sender
           control       = submission/sender_retain
   ###   END LOCAL MODIFICATION
           control       = dkim_disable_verify
