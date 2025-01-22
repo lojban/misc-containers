@@ -327,7 +327,9 @@ host_lookup = *
 # Comment this one out if you uncomment the above. Did you make sure
 # saslauthd is actually running first?
 #
-auth_advertise_hosts =
+### BEGIN LOCAL MODIFICATION
+auth_advertise_hosts = ${if eq {$tls_cipher}{}{}{*}}
+#### END LOCAL MODIFICATION
 
 # The setting below causes Exim to try to initialize the system resolver
 # library with DNSSEC support.  It has no effect if your library lacks
@@ -564,6 +566,22 @@ acl_check_rcpt:
   # cron jobs and the like)
   ###   END LOCAL MODIFICATION
 
+  # Accept if the message arrived over an authenticated connection, from
+  # any host. Again, these messages are usually from MUAs, so recipient
+  # verification is omitted, and submission mode is set. And again, we do this
+  # check before any black list tests.
+
+  ### BEGIN LOCAL MODIFICATION
+  # Moved the authenticated stuff upwards so it gets caught sooner
+  ###   END LOCAL MODIFICATION
+  accept  authenticated = *
+  ### BEGIN LOCAL MODIFICATION
+  # Local users get to specify a sender
+          control       = submission/sender_retain
+  ###   END LOCAL MODIFICATION
+          control       = dkim_disable_verify
+          control       = dmarc_disable_verify
+
   # Reject all RCPT commands after too many bad recipients
   # This is partly a defense against spam abuse and partly attacker abuse.
   # Real senders should manage, by the time they get to 10 RCPT directives,
@@ -598,16 +616,6 @@ acl_check_rcpt:
   # list, it is a mistake.
 
   accept  hosts         = +relay_from_hosts
-          control       = submission
-          control       = dkim_disable_verify
-          control       = dmarc_disable_verify
-
-  # Accept if the message arrived over an authenticated connection, from
-  # any host. Again, these messages are usually from MUAs, so recipient
-  # verification is omitted, and submission mode is set. And again, we do this
-  # check before any black list tests.
-
-  accept  authenticated = *
           control       = submission
           control       = dkim_disable_verify
           control       = dmarc_disable_verify
